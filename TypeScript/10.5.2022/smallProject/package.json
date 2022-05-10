@@ -1,5 +1,5 @@
 {
-  "name": "smallproject",
+  "name": "understanding-ts",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -7,10 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "lite-server"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Omar",
   "license": "ISC",
   "devDependencies": {
-    "lite-server": "^2.6.4"
+    "lite-server": "^2.6.1"
   }
 }
