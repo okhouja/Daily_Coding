@@ -11,7 +11,7 @@ const person: {
 }= {
   name: "Omar",
   age: 40,
-  hobbies: ["Sports", "Cooking"];
+  hobbies: ["Sports", "Cooking"],
   role: [2, 'author']
 };
 
