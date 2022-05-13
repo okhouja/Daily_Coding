@@ -12,4 +12,4 @@ function generateError(message: string, code: number): never {
   // while(true){}
 }
 
-generateError('An error occurred!',500)
+generateError("An error occurred!", 500);
