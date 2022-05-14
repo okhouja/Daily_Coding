@@ -1,12 +1,18 @@
 class Department {
   name: string;
 
-  constructor(n:string) {
-      this.name = n;
+  constructor(n: string) {
+    this.name = n;
+  }
+  describe(this: Department) {
+    console.log("Department:" + this.name);
   }
 }
 
-const accounting= new Department('Acountting')
+const accounting = new Department("Acountting");
 
-console.log(accounting);
+accounting.describe();
 
+const accountingCopy={name:'Dummy',describe:accounting.describe}
+
+accountingCopy.describe()
