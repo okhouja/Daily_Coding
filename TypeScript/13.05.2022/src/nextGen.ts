@@ -27,3 +27,26 @@
 //   button.addEventListener("click", (event) => console.log(event));
 // }
 // printOutput(add(5));
+
+const hobbies = ["Sports", "Cooking"];
+const activeHobbies = ["Swimming"];
+
+activeHobbies.push(...hobbies);
+
+const person = {
+  firstName: "Omar",
+  age: 40,
+};
+
+const copiedPerson = { ...person };
+
+const add2 = (...number: number[]) => {
+  return number.reduce((curResult, curValue) => {
+    return curResult + curValue;
+  }, 0);
+};
+
+const addNumbers = add2(5, 10, 2, 3.5);
+console.log(addNumbers);
+
+const [hobby1,hobby2,...remainingHobbies] = hobbies;
