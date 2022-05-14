@@ -1,10 +1,8 @@
-let logged
+let logged;
 
-function sendAnalytics(data: string){
-    console.log(data);
-    logged= true;
-    // let a =2
-    
+function sendAnalytics(data: string) {
+  console.log(data);
+  logged = true;
 }
 
-sendAnalytics("The Data")
+sendAnalytics("The Data");
