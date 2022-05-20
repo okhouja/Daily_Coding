@@ -134,6 +134,9 @@ const userInputElement = document.getElementById("user-input")!;
 if (userInputElement) {
   (userInputElement as HTMLInputElement).value = "Hi there!";
 }
+/* */
+
+/* *** Index Type *** */
 
 interface ErrorContainer {
   // {email: 'Not a valid email', username: 'Must start with a character!'}
