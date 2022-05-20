@@ -23,7 +23,6 @@ type Numeric = number | boolean;
 
 type Universal = Combinable & Numeric;
 
-
 // Function Overloads
 function add(a: number, b: number): number;
 function add(a: string, b: string): string;
@@ -37,6 +36,14 @@ function add(a: Combinable, b: Combinable) {
 }
 const result = add("John", "Smith");
 result.split(" ");
+
+// Optionam Chaining
+const fetchedUserData = {
+  id: "u1",
+  name: "Paul",
+  job: { title: "CEO", description: "My own Company" },
+};
+console.log(fetchedUserData?.job?.title);
 
 type UnknownEmployee = Employee | Admin;
 
