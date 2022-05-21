@@ -11,7 +11,21 @@ function Logger(logString: string) {
     console.log(constructor);
   };
 }
-@Logger("LOGGING - PERSON")
+
+function WithTemplate(template: string, hookId: string) {
+  return function (constructor: any) {
+    const hookE1 = document.getElementById(hookId);
+    const p = new constructor();
+    if (hookE1) {
+      hookE1.innerHTML = template;
+      hookE1.querySelector("h1")!.textContent = p.name;
+    }
+  };
+}
+
+// @Logger("LOGGING - PERSON")
+@WithTemplate("<h1>My Person Object</h1>", "app")
+
 class Person {
   name = "Omar";
 
