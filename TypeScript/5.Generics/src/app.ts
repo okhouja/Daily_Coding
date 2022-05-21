@@ -1,3 +1,15 @@
+/* 
+1.When can "Generics" come in very handy?
+    In cases where you have a type actually works together with multiple other possible types
+    (e.g. an object which emits data of different types).
+    Generics help you create data structures that work together or wrap values of a broad variety of types
+    (e.g. an array that can hold any type of data).
+
+2. What's the idea behind constraints (when talking about generics)?
+    Constraints allow you to narrow down the concrete types that may be used in a generic function etc.
+
+
+
 /* *** Built-in Generics *** */
 
 // const names: Array<string> = []; // string[]
@@ -80,6 +92,9 @@ const numberStorage = new DataStorage<number>();
 // objStorage.removeItem(maxObj);
 // console.log(objStorage.getItems());
 
+// TS Generic Utility Types
+// Partial
+
 interface CourseGoal {
   title: string;
   description: string;
@@ -97,6 +112,7 @@ function createCourseGoal(
   return courseGoal as CourseGoal;
 }
 
+// Readonly
 const names: Readonly<string[]> = ["Max", "Anna"];
 // names.push("Mark");
 // names.pop("");
