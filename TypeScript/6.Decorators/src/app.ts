@@ -14,18 +14,39 @@ function Logger(logString: string) {
   };
 }
 
+// function WithTemplate(template: string, hookId: string) {
+//   console.log("TEMPLATE FACTORY");
+
+//   return function (constructor: any) {
+//     console.log("Renedering template");
+
+//     const hookE1 = document.getElementById(hookId);
+//     const p = new constructor();
+//     if (hookE1) {
+//       hookE1.innerHTML = template;
+//       hookE1.querySelector("h1")!.textContent = p.name;
+//     }
+//   };
+// }
+
 function WithTemplate(template: string, hookId: string) {
   console.log("TEMPLATE FACTORY");
 
-  return function (constructor: any) {
-    console.log("Renedering template");
+  return function <T extends { new (...args: any[]): { name: string } }>(
+    originalConstructor: T
+  ) {
+    return class extends originalConstructor {
+      constructor(..._: any[]) {
+        super();
+        console.log("Renedering template");
 
-    const hookE1 = document.getElementById(hookId);
-    const p = new constructor();
-    if (hookE1) {
-      hookE1.innerHTML = template;
-      hookE1.querySelector("h1")!.textContent = p.name;
-    }
+        const hookE1 = document.getElementById(hookId);
+        if (hookE1) {
+          hookE1.innerHTML = template;
+          hookE1.querySelector("h1")!.textContent = this.name;
+        }
+      }
+    };
   };
 }
 
@@ -74,7 +95,7 @@ function Log4(target: any, name: string, position: number) {
   console.log(position);
 }
 
-class product {
+class Product {
   @Log
   title: string;
   private _price: number;
@@ -97,3 +118,6 @@ class product {
     return this._price * (1 + tax);
   }
 }
+
+const p1 = new Product("Book", 19);
+const p2 = new Product("Book 2", 29);
