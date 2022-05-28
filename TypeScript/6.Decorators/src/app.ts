@@ -149,3 +149,73 @@ p.showMessage();
 
 const button = document.querySelector("button")!;
 button.addEventListener("click", p.showMessage);
+
+interface ValidatorConfig {
+  [Property: string]: {
+    [validatebleProp: string]: string[]; // ['required','positive']
+  };
+}
+
+const registeredValidators: ValidatorConfig = {};
+
+function Required(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: ["required"],
+  };
+}
+function PositiveNumber(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: ["positive"],
+  };
+}
+function validate(obj: any) {
+  const objValidatorConfig = registeredValidators[obj.constructor.name];
+  if (!objValidatorConfig) {
+    return true;
+  }
+  let isValid = true;
+  for (const prop in objValidatorConfig) {
+    for (const validator of objValidatorConfig[prop]) {
+      switch (validator) {
+        case "required":
+          isValid = isValid && !!obj[prop];
+          break;
+        case "positive":
+          isValid = isValid && obj[prop] > 0;
+          break;
+      }
+    }
+  }
+  return isValid;
+}
+
+class Course {
+  @Required
+  title: string;
+  @PositiveNumber
+  price: number;
+
+  constructor(t: string, p: number) {
+    this.title = t;
+    this.price = p;
+  }
+}
+const courseForm = document.querySelector("form")!;
+courseForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const titleE1 = document.getElementById("title") as HTMLInputElement;
+  const priceE1 = document.getElementById("price") as HTMLInputElement;
+
+  const title = titleE1.value;
+  const price = +priceE1.value;
+
+  const createCourse = new Course(title, price);
+
+  if (!validate(createCourse)) {
+    alert("Invalid input, Please try again");
+    return;
+  }
+  console.log(createCourse);
+});
