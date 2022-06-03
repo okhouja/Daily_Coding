@@ -5,7 +5,7 @@ import { autobind } from '../decorators/autobind.js';
 
 
 // ProjectItem Class
-export class ProjectItem
+export default class ProjectItem
   extends Component<HTMLUListElement, HTMLLIElement>
   implements Draggable
 {
