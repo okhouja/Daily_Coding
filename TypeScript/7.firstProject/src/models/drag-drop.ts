@@ -5,7 +5,7 @@ export interface Draggable {
     dragEndHandler(event: DragEvent): void;
   }
   
- export interface DragTaget {
+ export interface DragTarget {
     dragOverHandler(event: DragEvent): void;
     dropHandler(event: DragEvent): void;
     dragLeaveHandler(event: DragEvent): void;

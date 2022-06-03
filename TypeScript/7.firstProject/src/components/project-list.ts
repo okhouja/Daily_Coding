@@ -9,7 +9,7 @@ import { ProjectItem } from './project-item.js';
 
 export class ProjectList
   extends Component<HTMLDivElement, HTMLElement>
-  implements DragTaget
+  implements DragTarget
 {
   assignedProjects: Project[];
 
