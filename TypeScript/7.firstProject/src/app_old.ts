@@ -1,3 +1,4 @@
+/*
 // Drag and drop Interfaces
 
 interface Draggable {
@@ -26,7 +27,7 @@ class Project {
     public status: ProjectStatus
   ) {}
 }
-
+*/
 // Project State Management
 
 type Listener<T> = (items: T[]) => void;
