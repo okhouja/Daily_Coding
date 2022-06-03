@@ -141,8 +141,8 @@ function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   };
   return adjDescriptor;
 }
-
-// Component Base Class
+/*
+ // Component Base Class
 
 abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   templateElement: HTMLTemplateElement;
@@ -181,7 +181,7 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   abstract configure(): void;
   abstract renderContent(): void;
 }
-
+*/
 // ProjectItem Class
 class ProjectItem
   extends Component<HTMLUListElement, HTMLLIElement>
