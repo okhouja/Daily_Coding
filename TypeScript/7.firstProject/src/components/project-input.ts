@@ -1,4 +1,4 @@
-import Cmp from "./base-component.js";
+import Cmp from "./base-component";
 import * as Validation from "../util/validation";
 import { autobind as Autobind } from "../decorators/autobind";
 import { projectState } from "../state/project-state";
