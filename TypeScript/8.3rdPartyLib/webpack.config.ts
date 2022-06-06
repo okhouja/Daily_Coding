@@ -22,10 +22,7 @@ const config: Configuration = {
       {
         test: /\.ts$/,
         use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-typescript"],
-          },
+          loader: "ts-loader",
         },
         exclude: /node_modules/,
       },
