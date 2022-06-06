@@ -1,8 +1,8 @@
 import path from "path";
-import { Configuration } from "webpack";
+import * as webpack from "webpack";
 import "webpack-dev-server";
 
-const config: Configuration = {
+const config: webpack.Configuration = {
   mode: "development",
   entry: "./src/app.ts",
   output: {
@@ -20,13 +20,8 @@ const config: Configuration = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-typescript"],
-          },
-        },
+        test: /\.tsx$/,
+        use: "ts-loader",
         exclude: /node_modules/,
       },
     ],

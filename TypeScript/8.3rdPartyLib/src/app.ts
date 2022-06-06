@@ -1,7 +1,9 @@
- import _ from 'lodash'
+//  import _ from 'lodash'
 
-console.log(_.shuffle([1,2,3,4]));
+// console.log(_.shuffle([1,2,3,4]));
 
-console.log('f');
+import { Product } from "./productModel";
 
+const p1 = new Product("A Book", 12.99);
 
+console.log(p1.getInformation());
