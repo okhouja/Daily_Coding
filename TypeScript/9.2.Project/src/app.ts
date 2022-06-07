@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import axios from "axios";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
