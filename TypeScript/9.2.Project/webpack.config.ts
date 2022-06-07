@@ -1,6 +1,7 @@
 import path from "path";
 import { Configuration } from "webpack";
 import "webpack-dev-server";
+import Dotenv from "dotenv-webpack";
 
 const config: Configuration = {
   mode: "development",
@@ -16,7 +17,7 @@ const config: Configuration = {
     },
   },
   devtool: "inline-source-map",
-
+  // target: "node",
   module: {
     rules: [
       {
@@ -30,7 +31,9 @@ const config: Configuration = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    fallback: { os: false },
   },
+  plugins: [new Dotenv()],
 };
 
 export default config;
