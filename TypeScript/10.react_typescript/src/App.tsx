@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+// import { Route } from 'react-router-dom';
+
 import TodoList from "./components/TodoList";
 import NewTodo from "./components/NewTodo";
 import { Todo } from "./todo.model";
@@ -13,10 +15,15 @@ const App: React.FC = () => {
     ]);
   };
 
+  const todoDeleteHandler = (todoID: string) => {
+    setTodos(prevTodos =>{
+      return prevTodos.filter(todo=>todo.id !== todoID);
+    })
+  }
   return (
     <div className="App">
       <NewTodo onAddTodo={todoAddHandler} />
-      <TodoList items={todos} />
+      <TodoList items={todos} onDeleteTodo={todoDeleteHandler}/>
     </div>
   );
 };
