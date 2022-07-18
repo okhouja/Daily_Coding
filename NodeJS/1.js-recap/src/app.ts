@@ -1,3 +1,4 @@
+/*
 // const name1 = "Omar";
 // let age = 40;
 // const hobbies = true;
@@ -78,3 +79,29 @@ console.log(hobby1, hobby2);
 //   return args;
 // };
 // console.log(toArray(1,2,3,4));
+*/
+
+const fetchData = () => {
+  const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Done!");
+    }, 1500);
+  });
+  return promise;
+};
+
+setTimeout(() => {
+  console.log("Timer is Done!");
+  fetchData()
+    .then((text) => {
+      console.log(text);
+      return fetchData();
+    })
+    .then((text2) => {
+      console.log(text2);
+    });
+}, 2000);
+
+console.log('Hello!');
+console.log('Hi!');
+
