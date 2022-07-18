@@ -40,14 +40,26 @@ const person = {
 
 person.greet();
 
+const copiedPerson = { ...person };
+console.log(copiedPerson);
+
 // Arrays & Array Methods
 
-const hobbies2 = ['Sports','Cooking'];
+const hobbies2: string[] = ["Sports", "Cooking"];
 // for (let hobby of hobbies2){
 //   console.log(hobby);
-  
+
 // }
-console.log(hobbies2.map(hobby => 'Hobby: '+ hobby));
+// console.log(hobbies2.map(hobby => 'Hobby: '+ hobby));
 
-console.log(hobbies2);
+// console.log(hobbies2);
+// hobbies2.push('Porgramming');
+// console.log(hobbies2);
 
+const copiedArray = [...hobbies2];
+console.log(copiedArray);
+
+const toArray = (...args: any) => {
+  return args;
+};
+console.log(toArray(1,2,3,4));
