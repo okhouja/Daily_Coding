@@ -1,12 +1,12 @@
-let name1 = "Omar";
-let age: number = 40;
-let hobbies = true;
+const name1 = "Omar";
+let age = 40;
+const hobbies = true;
 
-function summarizeUser(
+const summarizeUser = (
   userName: string,
   userAge: number,
   userHobbies: boolean
-) {
+) => {
   return (
     "Name is " +
     userName +
@@ -15,6 +15,15 @@ function summarizeUser(
     ", and the User has hobbies: " +
     userHobbies
   );
-}
+};
+
+const add = (a: number, b: number) => a + b;
+console.log(add(2, 4));
+
+const addOne = (a: number) => a + 1;
+console.log(addOne(1));
+
+const addRandom = () => 1 + 2;
+console.log(addRandom());
 
 console.log(summarizeUser(name1, age, hobbies));
