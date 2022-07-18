@@ -27,3 +27,15 @@ const addRandom = () => 1 + 2;
 console.log(addRandom());
 
 console.log(summarizeUser(name1, age, hobbies));
+
+// Working With Objects , properties & methods
+
+const person = {
+  name: "Omar",
+  age: 40,
+  greet() {
+    console.log("Hi, I am " + this.name);
+  },
+};
+
+person.greet();
