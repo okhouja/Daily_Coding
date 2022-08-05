@@ -23,8 +23,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //   res.send("<h1> Hello from Express! </h1>");
 // });
 
-app.use(adminRoutes);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
+
+app.use((req, res, next) => {
+  res.send("<h1>Page not Found!</h1>");
+});
+
 // const server = http.createServer(app);
 
 app.listen(3000, () => {
