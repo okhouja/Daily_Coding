@@ -8,7 +8,13 @@ const app = express();
 
 // app.set("view engine", "pug");
 
-app.engine("hbs", expressHbs.engine({ extname: '.hbs', defaultLayout: ""}));
+app.engine(
+  "hbs",
+  expressHbs.engine({
+    extname: ".hbs",
+    defaultLayout: "main-layout",
+  })
+);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
