@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 // const rootDir = require("../util/path");
+const path = require("path");
+
 
 const productsController = require("../controllers/products");
 
