@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 const path = require("path");
 
+const Product = require("../models/product");
 
-const products : any = [];
-
+// const products : any = [];
 
 exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
   res.render("add-product", {
@@ -16,11 +16,13 @@ exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
 };
 
 exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
-  products.push({ title: req.body.title });
+  const product = new Product(req.body.title);
+  product.save();
   res.redirect("/");
 };
 
-exports.getProduct = (req: Request, res: Response, next: NextFunction)  => {
+exports.getProduct = (req: Request, res: Response, next: NextFunction) => {
+  const products = Product.fetchAll();
   res.render("shop", {
     prods: products,
     pageTitle: "Shop",
@@ -28,7 +30,6 @@ exports.getProduct = (req: Request, res: Response, next: NextFunction)  => {
     hasProducts: products.length > 0,
     activeShop: true,
     productsCSS: true,
-    
   });
-}
+};
 // module.exports = productsController;
