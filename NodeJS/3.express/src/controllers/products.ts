@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-const path = require("path");
+// const path = require("path");
 
 const Product = require("../models/product");
 
@@ -22,14 +22,15 @@ exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
 };
 
 exports.getProduct = (req: Request, res: Response, next: NextFunction) => {
-  const products = Product.fetchAll();
-  res.render("shop", {
-    prods: products,
-    pageTitle: "Shop",
-    path: "/",
-    hasProducts: products.length > 0,
-    activeShop: true,
-    productsCSS: true,
+  Product.fetchAll((products: any) => {
+    res.render("shop", {
+      prods: products,
+      pageTitle: "Shop",
+      path: "/",
+      hasProducts: products.length > 0,
+      activeShop: true,
+      productsCSS: true,
+    });
   });
 };
 // module.exports = productsController;
