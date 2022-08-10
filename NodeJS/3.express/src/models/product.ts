@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 
-// const products: any = [];
 const p = path.join(__dirname, "../data", "products.json");
 
 const getProductFromFile = (cb: any) => {
