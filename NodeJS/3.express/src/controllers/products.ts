@@ -6,7 +6,7 @@ const Product = require("../models/product");
 // const products : any = [];
 
 exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
-  res.render("add-product", {
+  res.render("admin/add-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     formsCSS: true,
@@ -23,7 +23,7 @@ exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
 
 exports.getProduct = (req: Request, res: Response, next: NextFunction) => {
   Product.fetchAll((products: any) => {
-    res.render("shop", {
+    res.render("shop/product-list", {
       prods: products,
       pageTitle: "Shop",
       path: "/",
