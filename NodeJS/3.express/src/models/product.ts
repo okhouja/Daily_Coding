@@ -18,16 +18,19 @@ module.exports = class Product {
   imageUrl: string;
   description: string;
   price: number;
+  id: string;
   constructor(
     title: string,
     imageUrl: string,
     price: number,
-    description: string
+    description: string,
+    id: string
   ) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.price = price;
     this.description = description;
+    this.id = Math.random().toString();
   }
   save() {
     getProductFromFile((products: any) => {
