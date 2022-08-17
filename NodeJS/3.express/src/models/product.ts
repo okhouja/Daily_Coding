@@ -15,11 +15,16 @@ const getProductFromFile = (cb: any) => {
 
 module.exports = class Product {
   title: string;
-  constructor(t: any) {
-    this.title = t;
+  constructor(
+    title: string,
+    imageUrl: string,
+    description: string,
+    price: number
+  ) {
+    this.title = title;
   }
   save() {
-    getProductFromFile((products:any) => {
+    getProductFromFile((products: any) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err: any) => {
         console.log(err);

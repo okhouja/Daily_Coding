@@ -1,9 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-// const path = require("path");
-
 const Product = require("../models/product");
-
-// const products : any = [];
 
 exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
   res.render("admin/add-product", {
@@ -21,16 +17,12 @@ exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
   res.redirect("/");
 };
 
-exports.getProduct = (req: Request, res: Response, next: NextFunction) => {
+exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
   Product.fetchAll((products: any) => {
-    res.render("shop/product-list", {
+    res.render("admin/products", {
       prods: products,
-      pageTitle: "Shop",
-      path: "/",
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productsCSS: true,
+      pageTitle: "Admin Products",
+      path: "/admin/products",
     });
   });
 };
-// module.exports = productsController;
