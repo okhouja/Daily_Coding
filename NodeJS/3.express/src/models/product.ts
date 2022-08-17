@@ -21,13 +21,13 @@ module.exports = class Product {
   constructor(
     title: string,
     imageUrl: string,
-    description: string,
-    price: number
+    price: number,
+    description: string
   ) {
     this.title = title;
     this.imageUrl = imageUrl;
-    this.description = description;
     this.price = price;
+    this.description = description;
   }
   save() {
     getProductFromFile((products: any) => {
