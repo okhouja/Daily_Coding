@@ -12,7 +12,7 @@ exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
 };
 
 exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
-  const title = req.params.title;
+  const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
