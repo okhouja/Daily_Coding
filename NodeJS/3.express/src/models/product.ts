@@ -16,9 +16,10 @@ const getProductFromFile = (cb: any) => {
 module.exports = class Product {
   title: string;
   imageUrl: string;
-  description: string;
   price: number;
+  description: string;
   id: string;
+
   constructor(
     title: string,
     imageUrl: string,
@@ -30,9 +31,10 @@ module.exports = class Product {
     this.imageUrl = imageUrl;
     this.price = price;
     this.description = description;
-    this.id = Math.random().toString();
+    this.id = id;
   }
   save() {
+    this.id = Math.random().toString();
     getProductFromFile((products: any) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err: any) => {
