@@ -7,7 +7,7 @@ const p = path.join(__dirname, "../data", "cart.json");
 module.exports = class Cart {
   static addProduct(id: any, productPrice: any) {
     type cart = {
-      products: any;
+      products: string;
       totalPrice: number;
     };
     // Fetch the previos cart
