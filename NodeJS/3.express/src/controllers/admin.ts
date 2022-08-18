@@ -5,7 +5,7 @@ exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    editing: false
+    editing: false,
   });
 };
 
@@ -37,6 +37,14 @@ exports.getEditProduct = (req: Request, res: Response, next: NextFunction) => {
       product: product,
     });
   });
+};
+
+exports.postEditProduct = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  
 };
 
 exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
