@@ -15,7 +15,7 @@ exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(title, imageUrl, price, description);
+  const product = new Product(null, title, imageUrl, price, description);
   product.save();
   res.redirect("/");
 };
@@ -39,12 +39,21 @@ exports.getEditProduct = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-exports.postEditProduct = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  
+exports.postEditProduct = (req: Request, res: Response, next: NextFunction) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.image;
+  const updatedDesc = req.body.description;
+  const updatedProduct = new Product(
+    prodId,
+    updatedTitle,
+    updatedPrice,
+    updatedImageUrl,
+    updatedDesc
+  );
+  updatedProduct.save();
+  res.redirect("/admin/products");
 };
 
 exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
@@ -55,4 +64,13 @@ exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
       path: "/admin/products",
     });
   });
+};
+
+exports.postDeleteProduct = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const prodId = req.body.productId;
+  
 };

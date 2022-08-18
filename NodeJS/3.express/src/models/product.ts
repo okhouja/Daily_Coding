@@ -14,18 +14,18 @@ const getProductFromFile = (cb: any) => {
 };
 
 module.exports = class Product {
+  id: string;
   title: string;
   imageUrl: string;
   price: number;
   description: string;
-  id: string;
 
   constructor(
+    id: string,
     title: string,
     imageUrl: string,
     price: number,
-    description: string,
-    id: string
+    description: string
   ) {
     this.title = title;
     this.imageUrl = imageUrl;
@@ -34,12 +34,30 @@ module.exports = class Product {
     this.id = id;
   }
   save() {
-    this.id = Math.random().toString();
     getProductFromFile((products: any) => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), (err: any) => {
-        console.log(err);
-      });
+      if (this.id) {
+        const existingProductIndex = products.findIndex(
+          (prod: any) => prod.id === this.id
+        );
+        const updatedProducts = [...products];
+        updatedProducts[existingProductIndex] = this;
+        fs.writeFile(p, JSON.stringify(updatedProducts), (err: any) => {
+          console.log(err);
+        });
+      } else {
+        this.id = Math.random().toString();
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(products), (err: any) => {
+          console.log(err);
+        });
+      }
+    });
+  }
+
+  static deleteById(id: any, cb: any) {
+    getProductFromFile((products: any) => {
+      const product = products.find((p: any) => p.id === id);
+      cb(product);
     });
   }
 
@@ -47,10 +65,10 @@ module.exports = class Product {
     getProductFromFile(cb);
   }
 
-  static findById(id: any, cb: any) {
+  static findById(id: any) {
     getProductFromFile((products: any) => {
-      const product = products.find((p: any) => p.id === id);
-      cb(product);
+      const updatedProduct = products.filter((prod: any) => prod.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProduct));
     });
   }
 };
