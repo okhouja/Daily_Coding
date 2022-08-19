@@ -1,4 +1,6 @@
-const fs = require("fs");
+export {};
+
+const fs = require('fs');
 const path = require("path");
 
 const Cart = require("../models/cart");

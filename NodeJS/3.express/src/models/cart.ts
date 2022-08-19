@@ -1,6 +1,7 @@
-const fs = require("fs")
-// import { Buffer } from "node:stream/consumers";
-import path from "path";
+export {};
+
+const fs: any = require("fs")
+const path: any= require("path");
 
 const p = path.join(__dirname, "../data", "cart.json");
 
@@ -12,14 +13,14 @@ module.exports = class Cart {
     };
     // Fetch the previos cart
     fs.readFile(p, (err: any, fileContent: any) => {
-      let products: string[] = [];
+      let products: any[] =[];
       let cart = { products, totalPrice: 0 };
       if (!err) {
         cart = JSON.parse(fileContent);
       }
       // Analyze the cart => Find existing products
       const existingProductIndex: any = cart.products.findIndex(
-        (prod) => prod[id] === id
+        prod => prod.id === id
       );
       const existingProduct: any = cart.products[existingProductIndex];
       let updatedProduct: any;
