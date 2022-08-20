@@ -20,10 +20,26 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then(([product]: any) => {
+
+  // first way
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((products: any) => {
+  //     res.render("shop/product-detail", {
+  //       product: products[0],
+  //       pageTitle: products[0].title,
+  //       path: "/products",
+  //     });
+  //   })
+  //   .catch((err: Error) => {
+  //     console.log(err);
+  //   });
+
+  // second way
+  
+  Product.findByPk(prodId)
+    .then((product: any) => {
       res.render("shop/product-detail", {
-        product: product[0],
+        product: product,
         pageTitle: product.title,
         path: "/products",
       });
