@@ -24,6 +24,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     .then((result: any) => {
       // console.log(result);
       console.log("Created Product");
+      res.redirect("/admin/products");
     })
     .catch((err: Error) => console.log(err));
 };
@@ -89,6 +90,15 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect("/admin/products");
+  Product.findByPk(prodId)
+    .then((product: any) => {
+      return product.destroy();
+    })
+    .then((result: any) => {
+      console.log("DESTROYED PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
