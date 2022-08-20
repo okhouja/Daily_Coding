@@ -35,7 +35,7 @@ export const getProduct: RequestHandler = (req, res, next) => {
   //   });
 
   // second way
-  
+
   Product.findByPk(prodId)
     .then((product: any) => {
       res.render("shop/product-detail", {

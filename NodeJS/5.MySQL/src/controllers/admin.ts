@@ -65,13 +65,17 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll((products: any) => {
-    res.render("admin/products", {
-      prods: products,
-      pageTitle: "Admin Products",
-      path: "/admin/products",
+  Product.findAll()
+    .then((products: any) => {
+      res.render("admin/products", {
+        prods: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
     });
-  });
 };
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
