@@ -5,10 +5,10 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows]: any) => {
+  Product.findAll()
+    .then((products: any) => {
       res.render("shop/product-list", {
-        prods: rows,
+        prods: products,
         pageTitle: "All Product",
         path: "/products",
       });
@@ -32,10 +32,10 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, fieldData]: any) => {
+  Product.findAll()
+    .then((products: any) => {
       res.render("shop/index", {
-        prods: rows,
+        prods: products,
         pageTitle: "Shop",
         path: "/",
       });

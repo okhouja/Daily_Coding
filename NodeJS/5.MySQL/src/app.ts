@@ -25,7 +25,7 @@ app.use(errorController.get404);
 sequelize
   .sync()
   .then((result: any) => {
-    console.log(result);
+    // console.log(result);
     app.listen(3000, () => {
   console.log("Server is Running on port 3000!");
 });

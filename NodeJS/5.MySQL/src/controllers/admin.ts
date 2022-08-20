@@ -1,7 +1,7 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { RequestHandler } from "express";
 const Product = require("../models/product");
 
-exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
+export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
@@ -9,25 +9,26 @@ exports.getAddProduct = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-exports.postAddProduct = (req: Request, res: Response, next: NextFunction) => {
+export const postAddProduct: RequestHandler = (req, res, next) => {
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(null, title, imageUrl, price, description);
-  product
-    .save()
-    .then(() => {
-      res.redirect("/");
+  Product.create({
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+  })
+    .then((result: any) => {
+      // console.log(result);
+      console.log("Created Product");
     })
-    .catch((err: Error) => {
-      console.log(err);
-    });
-  res.redirect("/");
+    .catch((err: Error) => console.log(err));
 };
 
-exports.getEditProduct = (req: Request, res: Response, next: NextFunction) => {
+export const getEditProduct: RequestHandler = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect("/");
@@ -46,7 +47,7 @@ exports.getEditProduct = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-exports.postEditProduct = (req: Request, res: Response, next: NextFunction) => {
+export const postEditProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
@@ -63,7 +64,7 @@ exports.postEditProduct = (req: Request, res: Response, next: NextFunction) => {
   res.redirect("/admin/products");
 };
 
-exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
+export const getProducts: RequestHandler = (req, res, next) => {
   Product.fetchAll((products: any) => {
     res.render("admin/products", {
       prods: products,
@@ -73,11 +74,7 @@ exports.getProducts = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-exports.postDeleteProduct = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   Product.deleteById(prodId);
   res.redirect("/admin/products");
