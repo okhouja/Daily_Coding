@@ -20,13 +20,15 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId, (product: any) =>
-    res.render("shop/product-detail", {
-      product: product,
-      pageTitle: product.title,
-      path: "/products",
+  Product.findById(prodId)
+    .then(([product]: any) => {
+      res.render("shop/product-detail", {
+        product: product[0],
+        pageTitle: product.title,
+        path: "/products",
+      });
     })
-  );
+    .catch((err: Error) => console.log(err));
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
