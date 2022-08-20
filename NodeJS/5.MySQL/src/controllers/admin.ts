@@ -34,17 +34,19 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findById(prodId, (product: any) => {
-    if (!product) {
-      return res.redirect("/");
-    }
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Product",
-      path: "/admin/edit-product",
-      editing: editMode,
-      product: product,
-    });
-  });
+  Product.findByPk(prodId)
+    .then((products: any) => {
+      if (!products) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: editMode,
+        product: products,
+      });
+    })
+    .catch((err: Error) => console.log(err));
 };
 
 export const postEditProduct: RequestHandler = (req, res, next) => {
@@ -53,15 +55,22 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const updatedPrice = req.body.price;
   const updatedImageUrl = req.body.imageUrl;
   const updatedDesc = req.body.description;
-  const updatedProduct = new Product(
-    prodId,
-    updatedTitle,
-    updatedImageUrl,
-    updatedPrice,
-    updatedDesc
-  );
-  updatedProduct.save();
-  res.redirect("/admin/products");
+
+  Product.findByPk(prodId)
+    .then((product: any) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.imageUrl = updatedImageUrl;
+      product.description = updatedDesc;
+      return product.save();
+    })
+    .then((result: any) => {
+      console.log("Updated Product");
+      res.redirect("/admin/products");
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
