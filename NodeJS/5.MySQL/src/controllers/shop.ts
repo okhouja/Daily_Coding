@@ -5,13 +5,17 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll((products: any) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "All Product",
-      path: "/products",
+  Product.fetchAll()
+    .then(([rows]: any) => {
+      res.render("shop/product-list", {
+        prods: rows,
+        pageTitle: "All Product",
+        path: "/products",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
     });
-  });
 };
 
 export const getProduct: RequestHandler = (req, res, next) => {
@@ -26,17 +30,18 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
-  Product.fetchAll().then(([rows, fieldData]: any) => {
-    res
-      .render("shop/index", {
+  Product.fetchAll()
+    .then(([rows, fieldData]: any) => {
+      res.render("shop/index", {
         prods: rows,
         pageTitle: "Shop",
         path: "/",
-      })
-      
-  });
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
-
 
 // export const getIndex: RequestHandler = async (req, res, next) => {
 //   try {
@@ -51,7 +56,6 @@ export const getIndex: RequestHandler = (req, res, next) => {
 //     res.status(500).send(err);
 //   }
 // };
-
 
 export const getCart: RequestHandler = (req, res, next) => {
   Cart.getCart((cart: any) => {
