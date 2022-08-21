@@ -35,11 +35,13 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  req.user
-    .getProducts({ WHERE: { id: prodId } })
-    // Product.findByPk(prodId)
+  // req.user;
+  // .getProducts({ WHERE: { id: prodId } })
+  Product.findByPk(prodId)
     .then((products: any) => {
-      const product = products[0];
+      const product = products;
+      // console.log(product);
+
       if (!product) {
         return res.redirect("/");
       }
@@ -53,34 +55,43 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     .catch((err: Error) => console.log(err));
 };
 
-export const postEditProduct: RequestHandler = (req, res, next) => {
-  const prodId = req.body.productId;
-  const updatedTitle = req.body.title;
-  const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
-  const updatedDesc = req.body.description;
+export const postEditProduct: RequestHandler = async (req, res, next) => {
+  // const prodId = req.body.productId;
+  // const updatedTitle = req.body.title;
+  // const updatedPrice = req.body.price;
+  // const updatedImageUrl = req.body.imageUrl;
+  // const updatedDesc = req.body.description;
 
-  Product.findByPk(prodId)
-    .then((product: any) => {
-      product.title = updatedTitle;
-      product.price = updatedPrice;
-      product.imageUrl = updatedImageUrl;
-      product.description = updatedDesc;
-      return product.save();
-    })
-    .then((result: any) => {
-      console.log("Updated Product");
-      res.redirect("/admin/products");
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+  const { productId, title, description, imageUrl, price } = req.body;
+
+  try {
+    await Product.update(
+      { title, description, imageUrl, price },
+      { where: { id: productId } }
+    )
+      // await Product.update(
+      //   {
+      //     title: updatedTitle,
+      //     price: updatedPrice,
+      //     imageUrl: updatedImageUrl,
+      //     description: updatedDesc,
+      //   },
+      //   {
+      //     WHERE: { id: prodId },
+      //   }
+      // )
+      .then((result: any) => {
+        console.log("UPDATED PRODUCT!");
+        res.redirect("/admin/products");
+      });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  
   req.user
-  .getProducts()
+    .getProducts()
     .then((products: any) => {
       res.render("admin/products", {
         prods: products,

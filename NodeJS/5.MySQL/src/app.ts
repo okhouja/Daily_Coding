@@ -1,7 +1,6 @@
 const path = require("path");
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
-import { HasMany } from "sequelize-typescript";
 
 const errorController = require("./controllers/error");
 
@@ -46,7 +45,7 @@ Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 Order.belongsTo(User);
 User.hasMany(Order);
-Order.belongsToMany(Product,{ through: OrderItem});
+Order.belongsToMany(Product, { through: OrderItem });
 
 sequelize
   // .sync({force: true})
@@ -65,11 +64,11 @@ sequelize
     // console.log(user);
     return user.createCart();
   })
-  .then(
+  .then((cart: any) => {
     app.listen(3000, () => {
       console.log("Server is Running on port 3000!");
-    })
-  )
+    });
+  })
   .catch((err: Error) => {
     console.log(err);
   });

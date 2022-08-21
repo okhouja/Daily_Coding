@@ -77,21 +77,50 @@ export const getCart: RequestHandler = (req, res, next) => {
   req.user
     .getCart()
     .then((cart: any) => {
-      return cart
-        .getProducts()
-        .then((products: any) => {
-          res.render("shop/cart", {
-            path: "/cart",
-            pageTitle: "Your Cart",
-            products: products,
-          });
-        })
-        .catch((err: Error) => console.log(err));
+      return cart.getProducts();
     })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+    .then((products: any) => {
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: products,
+      });
+    })
+    .catch((err: Error) => console.log(err));
 };
+
+/*
+
+modern javascript
+exports.postCart = async (req, res, next) => {
+  try {
+    const prodId = req.body.productId;
+    let qty;
+    let prod;
+    const cart = await req.user.getCart();
+    const [product] = await cart.getProducts({where:{id: prodId}});
+    if (product) {
+      [qty, prod] = [product.cartItem.quantity + 1, product];
+    } else {
+      [qty, prod] = [1, await Product.findByPk(prodId)];
+    }
+    await cart.addProduct(prod, {
+      through: {quantity: qty}
+    });
+    res.redirect('/cart');
+  }
+  catch(err) {
+    console.log(err);
+  }
+};
+
+
+*/
+
+
+
+
+
 
 export const postCart: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
@@ -101,7 +130,7 @@ export const postCart: RequestHandler = (req, res, next) => {
     .getCart()
     .then((cart: any) => {
       fetchedCart = cart;
-      return cart.getProducts({ WHERE: { id: prodId } });
+      return cart.getProducts({ where: { id: prodId } });
     })
     .then((products: any) => {
       let product;
@@ -155,7 +184,7 @@ export const postOrder: RequestHandler = (req, res, next) => {
       return req.user
         .createOrder()
         .then((order: any) => {
-          order.addProducts(
+          return order.addProducts(
             products.map((product: any) => {
               product.orderItem = { quantity: product.cartItem.quantity };
               return product;
@@ -185,12 +214,3 @@ export const getOrders: RequestHandler = (req, res, next) => {
     })
     .catch((err: Error) => console.log(err));
 };
-
-export const getCheckout: RequestHandler = (req, res, next) => {
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-  });
-};
-
-// module.exports = productsController;
