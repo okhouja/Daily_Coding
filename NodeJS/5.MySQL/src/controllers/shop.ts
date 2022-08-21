@@ -1,7 +1,5 @@
 import express, { RequestHandler } from "express";
 
-const Cart = require("../models/cart");
-
 const Product = require("../models/product");
 
 export const getProducts: RequestHandler = (req, res, next) => {
@@ -145,8 +143,47 @@ export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
     .catch((err: Error) => console.log(err));
 };
 
+export const postOrder: RequestHandler = (req, res, next) => {
+  let fetchedCart: any;
+  req.user
+    .getCart()
+    .then((cart: any) => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
+    .then((products: any) => {
+      return req.user
+        .createOrder()
+        .then((order: any) => {
+          order.addProducts(
+            products.map((product: any) => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch((err: Error) => console.log(err));
+    })
+    .then((result: any) => {
+      return fetchedCart.setProducts(null);
+    })
+    .then((result: any) => {
+      res.redirect("/orders");
+    })
+    .catch((err: Error) => console.log(err));
+};
+
 export const getOrders: RequestHandler = (req, res, next) => {
-  res.render("shop/orders", { path: "/orders", pageTitle: "Your Orders" });
+  req.user
+    .getOrders()
+    .then((orders: any) => {
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders: orders,
+      });
+    })
+    .catch((err: Error) => console.log(err));
 };
 
 export const getCheckout: RequestHandler = (req, res, next) => {
