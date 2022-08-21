@@ -76,24 +76,23 @@ export const getIndex: RequestHandler = (req, res, next) => {
 // };
 
 export const getCart: RequestHandler = (req, res, next) => {
-  Cart.getCart((cart: any) => {
-    Product.fetchAll((products: any) => {
-      const cartProducts = [];
-      for (let product of products) {
-        const cartProductData = cart.products.find(
-          (prod: any) => prod.id === product.id
-        );
-        if (cartProductData) {
-          cartProducts.push({ productData: product, qty: cartProductData.qty });
-        }
-      }
-      res.render("shop/cart", {
-        path: "/cart",
-        pageTitle: "Your Cart",
-        products: cartProducts,
-      });
+  req.user
+    .getCart()
+    .then((cart: any) => {
+      return cart
+        .getProduct()
+        .then((products: any) => {
+          res.render("shop/cart", {
+            path: "/cart",
+            pageTitle: "Your Cart",
+            products: products,
+          });
+        })
+        .catch((err: Error) => console.log(err));
+    })
+    .catch((err: Error) => {
+      console.log(err);
     });
-  });
 };
 
 export const postCart: RequestHandler = (req, res, next) => {
