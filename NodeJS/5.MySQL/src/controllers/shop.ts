@@ -80,7 +80,7 @@ export const getCart: RequestHandler = (req, res, next) => {
     .getCart()
     .then((cart: any) => {
       return cart
-        .getProduct()
+        .getProducts()
         .then((products: any) => {
           res.render("shop/cart", {
             path: "/cart",
@@ -98,6 +98,7 @@ export const getCart: RequestHandler = (req, res, next) => {
 export const postCart: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   let fetchedCart: any;
+  let newQuantity = 1;
   req.user
     .getCart()
     .then((cart: any) => {
@@ -109,17 +110,18 @@ export const postCart: RequestHandler = (req, res, next) => {
       if (products.length > 0) {
         product = products[0];
       }
-      let newQuantity = 1;
+
       if (product) {
-        //...
+        const oldQuantity = product.cartItem.quantity;
+        newQuantity = oldQuantity + 1;
+        return product;
       }
-      return Product.findByPk(prodId)
-        .then((product: any) => {
-          return fetchedCart.addProduct(product, {
-            through: { quantity: newQuantity },
-          });
-        })
-        .catch((err: Error) => console.log(err));
+      return Product.findByPk(prodId);
+    })
+    .then((product: any) => {
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQuantity },
+      });
     })
     .then(() => {
       res.redirect("/cart");
@@ -127,10 +129,7 @@ export const postCart: RequestHandler = (req, res, next) => {
 
     .catch((err: Error) => console.log(err));
 
-  // Product.findById(prodId, (product: any) => {
-  //   Cart.addProduct(prodId, product.price);
-  // });
-  // res.redirect("/cart");
+ 
 };
 
 export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
