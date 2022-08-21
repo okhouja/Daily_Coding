@@ -35,16 +35,19 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findByPk(prodId)
+  req.user
+    .getProducts({ WHERE: { id: prodId } })
+    // Product.findByPk(prodId)
     .then((products: any) => {
-      if (!products) {
+      const product = products[0];
+      if (!product) {
         return res.redirect("/");
       }
       res.render("admin/edit-product", {
         pageTitle: "Edit Product",
         path: "/admin/edit-product",
         editing: editMode,
-        product: products,
+        product: product,
       });
     })
     .catch((err: Error) => console.log(err));
@@ -75,7 +78,9 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.findAll()
+  
+  req.user
+  .getProducts()
     .then((products: any) => {
       res.render("admin/products", {
         prods: products,
