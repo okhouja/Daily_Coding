@@ -1,4 +1,4 @@
-import express, { RequestHandler } from "express";
+import { RequestHandler } from "express";
 const Product = require("../models/product");
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
@@ -35,11 +35,11 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  // req.user;
-  // .getProducts({ WHERE: { id: prodId } })
-  Product.findByPk(prodId)
+  req.user
+  .getProducts({ WHERE: { id: prodId } })
+  // Product.findByPk(prodId)
     .then((products: any) => {
-      const product = products;
+      const product = products[0];
       // console.log(product);
 
       if (!product) {

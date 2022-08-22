@@ -117,11 +117,6 @@ exports.postCart = async (req, res, next) => {
 
 */
 
-
-
-
-
-
 export const postCart: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   let fetchedCart: any;
@@ -172,7 +167,25 @@ export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
     .catch((err: Error) => console.log(err));
 };
 
-export const postOrder: RequestHandler = (req, res, next) => {
+export const postOrder: RequestHandler = async (req, res, next) => {
+  try {
+    const userCart = await req.user.getCart();
+    const userCartProducts = await userCart.getProducts();
+    const userOrder = await req.user.createOrder();
+
+    await userOrder.addProducts(
+      userCartProducts.map((p: any) => {
+        p.orderItem = { quantity: p.cartItem.quantity };
+      })
+    );
+
+    await res.redirect("/orders");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const postOrder2: RequestHandler = (req, res, next) => {
   let fetchedCart: any;
   req.user
     .getCart()
@@ -181,18 +194,22 @@ export const postOrder: RequestHandler = (req, res, next) => {
       return cart.getProducts();
     })
     .then((products: any) => {
-      return req.user
-        .createOrder()
-        .then((order: any) => {
-          return order.addProducts(
-            products.map((product: any) => {
-              product.orderItem = { quantity: product.cartItem.quantity };
-              return product;
-            })
-          );
-        })
-        .catch((err: Error) => console.log(err));
+      fetchedCart = products;
+      return req.user.createOrder();
     })
+    .then((order: any) => {
+      return order.addProducts(
+        fetchedCart.map((product: any) => {
+          product.orderItem = { quantity: product.cartItem.quantity };
+          console.log(product);
+
+          console.log(fetchedCart);
+
+          return product;
+        })
+      );
+    })
+
     .then((result: any) => {
       return fetchedCart.setProducts(null);
     })
@@ -204,13 +221,14 @@ export const postOrder: RequestHandler = (req, res, next) => {
 
 export const getOrders: RequestHandler = (req, res, next) => {
   req.user
-    .getOrders()
+    .getOrders({ include: [{ model: Product }] })
     .then((orders: any) => {
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
         orders: orders,
       });
+      console.log(orders);
     })
     .catch((err: Error) => console.log(err));
 };

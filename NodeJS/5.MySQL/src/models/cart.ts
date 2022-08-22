@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+import Sequelize from "sequelize";
 
 const sequelize = require("../util/database");
 
@@ -9,6 +9,7 @@ const Cart = sequelize.define("cart", {
     allowNull: false,
     primaryKey: true,
   },
+ 
 });
 
 module.exports = Cart;

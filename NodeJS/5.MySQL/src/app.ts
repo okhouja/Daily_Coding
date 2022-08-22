@@ -47,8 +47,9 @@ Order.belongsTo(User);
 User.hasMany(Order);
 Order.belongsToMany(Product, { through: OrderItem });
 
+let localUser: any;
 sequelize
-  // .sync({force: true})
+  // .sync({ force: true })
   .sync()
   .then((result: any) => {
     return User.findByPk(1);
@@ -62,7 +63,15 @@ sequelize
   })
   .then((user: any) => {
     // console.log(user);
+    localUser = user;
     return user.createCart();
+  })
+  .then((cart: any) => {
+    if (!cart) {
+      // only Create if no cart exists
+      return localUser.createCart();
+    }
+    return cart;
   })
   .then((cart: any) => {
     app.listen(3000, () => {
