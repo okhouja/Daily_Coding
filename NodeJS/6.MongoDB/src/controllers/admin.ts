@@ -14,21 +14,17 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  req.user
-    .createProduct({
-      title: title,
-      price: price,
-      imageUrl: imageUrl,
-      description: description,
-    })
-    .then((result: any) => {
+
+  const product = new Product(title, imageUrl, price, description)
+  
+    product.save().then((result: any) => {
       // console.log(result);
       console.log("Created Product");
       res.redirect("/admin/products");
     })
     .catch((err: Error) => console.log(err));
 };
-
+/*
 export const getEditProduct: RequestHandler = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) {
@@ -54,6 +50,7 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     })
     .catch((err: Error) => console.log(err));
 };
+
 
 export const postEditProduct: RequestHandler = async (req, res, next) => {
   // const prodId = req.body.productId;
@@ -118,3 +115,4 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
       console.log(err);
     });
 };
+*/

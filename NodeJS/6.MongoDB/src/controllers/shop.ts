@@ -3,7 +3,7 @@ import express, { RequestHandler } from "express";
 const Product = require("../models/product");
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.findAll()
+  Product.fetchAll()
     .then((products: any) => {
       res.render("shop/product-list", {
         prods: products,
@@ -15,6 +15,21 @@ export const getProducts: RequestHandler = (req, res, next) => {
       console.log(err);
     });
 };
+
+export const getIndex: RequestHandler = (req, res, next) => {
+  Product.fetchAll()
+    .then((products: any) => {
+      res.render("shop/index", {
+        prods: products,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
+};
+
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const prodId = req.params.productId;
@@ -34,7 +49,7 @@ export const getProduct: RequestHandler = (req, res, next) => {
 
   // second way
 
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then((product: any) => {
       res.render("shop/product-detail", {
         product: product,
@@ -45,33 +60,6 @@ export const getProduct: RequestHandler = (req, res, next) => {
     .catch((err: Error) => console.log(err));
 };
 
-export const getIndex: RequestHandler = (req, res, next) => {
-  Product.findAll()
-    .then((products: any) => {
-      res.render("shop/index", {
-        prods: products,
-        pageTitle: "Shop",
-        path: "/",
-      });
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
-};
-
-// export const getIndex: RequestHandler = async (req, res, next) => {
-//   try {
-//     const fetchAllData = await Product.fetchAll();
-//     const [rows, fieldData]: any = [];
-//     res.status(200).json(fetchAllData).render("shop/index", {
-//       prods: rows,
-//       pageTitle: "Shop",
-//       path: "/",
-//     });
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// };
 
 export const getCart: RequestHandler = (req, res, next) => {
   req.user
@@ -116,7 +104,7 @@ exports.postCart = async (req, res, next) => {
 
 
 */
-
+/*
 export const postCart: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   let fetchedCart: any;
@@ -231,4 +219,4 @@ export const getOrders: RequestHandler = (req, res, next) => {
       console.log(orders);
     })
     .catch((err: Error) => console.log(err));
-};
+};*/
