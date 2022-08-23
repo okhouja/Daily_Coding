@@ -3,8 +3,6 @@ const MongoClient = mongodb.MongoClient;
 
 const DB_HOST = process.env.DB_HOST;
 
-// console.log(DB_HOST);
-
 let _db: any;
 
 const mongoConnect = (callback: any) => {

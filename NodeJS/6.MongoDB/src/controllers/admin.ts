@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+
 const Product = require("../models/product");
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
@@ -15,29 +16,27 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(title, imageUrl, price, description)
-  
-    product.save().then((result: any) => {
+  const product = new Product(title, imageUrl, price, description);
+
+  product
+    .save()
+    .then((result: any) => {
       // console.log(result);
       console.log("Created Product");
       res.redirect("/admin/products");
     })
     .catch((err: Error) => console.log(err));
 };
-/*
+
 export const getEditProduct: RequestHandler = (req, res, next) => {
   const editMode = req.query.edit;
   if (!editMode) {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  req.user
-  .getProducts({ WHERE: { id: prodId } })
-  // Product.findByPk(prodId)
-    .then((products: any) => {
-      const product = products[0];
-      // console.log(product);
 
+  Product.findById(prodId)
+    .then((product: any) => {
       if (!product) {
         return res.redirect("/");
       }
@@ -51,44 +50,31 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     .catch((err: Error) => console.log(err));
 };
 
+export const postEditProduct: RequestHandler = (req, res, next) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDesc = req.body.description;
 
-export const postEditProduct: RequestHandler = async (req, res, next) => {
-  // const prodId = req.body.productId;
-  // const updatedTitle = req.body.title;
-  // const updatedPrice = req.body.price;
-  // const updatedImageUrl = req.body.imageUrl;
-  // const updatedDesc = req.body.description;
-
-  const { productId, title, description, imageUrl, price } = req.body;
-
-  try {
-    await Product.update(
-      { title, description, imageUrl, price },
-      { where: { id: productId } }
-    )
-      // await Product.update(
-      //   {
-      //     title: updatedTitle,
-      //     price: updatedPrice,
-      //     imageUrl: updatedImageUrl,
-      //     description: updatedDesc,
-      //   },
-      //   {
-      //     WHERE: { id: prodId },
-      //   }
-      // )
-      .then((result: any) => {
-        console.log("UPDATED PRODUCT!");
-        res.redirect("/admin/products");
-      });
-  } catch (err) {
-    console.log(err);
-  }
+  const product = new Product(
+    prodId,
+    updatedTitle,
+    updatedImageUrl,
+    updatedPrice,
+    updatedDesc
+  );
+  product
+    .save()
+    .then((result: any) => {
+      console.log("UPDATED PRODUCT!");
+      res.redirect("/admin/products");
+    })
+    .catch((err: Error) => console.log(err));
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  req.user
-    .getProducts()
+  Product.fetchAll()
     .then((products: any) => {
       res.render("admin/products", {
         prods: products,
@@ -103,7 +89,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findByPk(prodId)
+  Product.findById(prodId)
     .then((product: any) => {
       return product.destroy();
     })
@@ -115,4 +101,3 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
       console.log(err);
     });
 };
-*/
