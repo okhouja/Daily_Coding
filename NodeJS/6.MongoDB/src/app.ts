@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 
 const errorController = require("./controllers/error");
 const mongoConnect = require("./util/database").mongoConnect;
+const User = require("./models/user")
 
 const app = express();
 
@@ -25,10 +26,13 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 app.use((req, res, next) => {
+  User.findById('63052e4e53d7cb4a02db9e48')
+  .then((user:any) => req.user = user)
   next();
 });
 
 mongoConnect(() => {
+  
   app.listen(3000, () => {
     console.log("Server is Running on port 3000!");
   });

@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+const mongodb = require("mongodb");
 
 const Product = require("../models/product");
 
@@ -16,7 +17,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(title, imageUrl, price, description);
+  const product = new Product( title, imageUrl, price, description);
 
   product
     .save()
@@ -89,11 +90,9 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId)
-    .then((product: any) => {
-      return product.destroy();
-    })
-    .then((result: any) => {
+  Product.deleteById(prodId)
+
+    .then(() => {
       console.log("DESTROYED PRODUCT");
       res.redirect("/admin/products");
     })
