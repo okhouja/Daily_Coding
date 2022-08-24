@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-const mongodb = require("mongodb");
 
 const Product = require("../models/product");
 
@@ -16,8 +15,9 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
+  const userId = req.user._Id;
 
-  const product = new Product( title, imageUrl, price, description);
+  const product = new Product(title, imageUrl, price, description,null, userId);
 
   product
     .save()

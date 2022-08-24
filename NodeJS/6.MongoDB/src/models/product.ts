@@ -7,19 +7,22 @@ class Product {
   imageUrl: string;
   price: number;
   description: string;
+  userId: string;
 
   constructor(
-    id: string,
     title: string,
     imageUrl: string,
     price: number,
-    description: string
+    description: string,
+    id: string,
+    userId: string
   ) {
-    this._id = id ? new mongodb.ObjectId(id) : null;
     this.title = title;
     this.imageUrl = imageUrl;
     this.price = price;
     this.description = description;
+    this._id = id ? new mongodb.ObjectId(id) : null;
+    this.userId = userId;
   }
   save() {
     const db = getDb();
@@ -77,7 +80,7 @@ class Product {
     return db
       .collection("products")
       .deleteOne({ _id: new mongodb.ObjectId(prodId) })
-      .then(() => {
+      .then((result: any) => {
         console.log("Deleted");
       })
       .catch((err: Error) => {
@@ -88,4 +91,4 @@ class Product {
 
 module.exports = Product;
 
-export {}
+export {};
