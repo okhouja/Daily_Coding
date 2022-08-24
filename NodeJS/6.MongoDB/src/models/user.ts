@@ -91,7 +91,7 @@ export class User {
           items: products,
           user: {
             _id: new ObjectId(this._id),
-            name: this.username,
+            username: this.username,
           },
         };
         return db.collection("orders").insertOne(order);

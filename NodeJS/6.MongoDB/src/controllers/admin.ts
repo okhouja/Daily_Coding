@@ -17,7 +17,14 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const description = req.body.description;
   const userId = req.user._Id;
 
-  const product = new Product(title, imageUrl, price, description,null, userId);
+  const product = new Product(
+    title,
+    imageUrl,
+    price,
+    description,
+    null,
+    userId
+  );
 
   product
     .save()
@@ -59,11 +66,11 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const updatedDesc = req.body.description;
 
   const product = new Product(
-    prodId,
     updatedTitle,
-    updatedImageUrl,
     updatedPrice,
-    updatedDesc
+    updatedDesc,
+    updatedImageUrl,
+    prodId
   );
   product
     .save()
