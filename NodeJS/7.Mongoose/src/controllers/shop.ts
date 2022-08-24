@@ -3,8 +3,10 @@ import express, { RequestHandler } from "express";
 const Product = require("../models/product");
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products: any) => {
+      console.log(products);
+
       res.render("shop/product-list", {
         prods: products,
         pageTitle: "All Products",

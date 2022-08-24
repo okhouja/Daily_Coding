@@ -17,14 +17,12 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const description = req.body.description;
   const userId = req.user._Id;
 
-  const product = new Product(
-    title,
-    imageUrl,
-    price,
-    description,
-    null,
-    userId
-  );
+  const product = new Product({
+    title: title,
+    price: price,
+    description: description,
+    imageUrl: imageUrl,
+  });
 
   product
     .save()
