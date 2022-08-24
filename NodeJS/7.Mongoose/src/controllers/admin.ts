@@ -33,74 +33,74 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     .catch((err: Error) => console.log(err));
 };
 
-// export const getEditProduct: RequestHandler = (req, res, next) => {
-//   const editMode = req.query.edit;
-//   if (!editMode) {
-//     return res.redirect("/");
-//   }
-//   const prodId = req.params.productId;
+export const getEditProduct: RequestHandler = (req, res, next) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect("/");
+  }
+  const prodId = req.params.productId;
 
-//   Product.findById(prodId)
-//     .then((product: any) => {
-//       if (!product) {
-//         return res.redirect("/");
-//       }
-//       res.render("admin/edit-product", {
-//         pageTitle: "Edit Product",
-//         path: "/admin/edit-product",
-//         editing: editMode,
-//         product: product,
-//       });
-//     })
-//     .catch((err: Error) => console.log(err));
-// };
+  Product.findById(prodId)
+    .then((product: any) => {
+      if (!product) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editing: editMode,
+        product: product,
+      });
+    })
+    .catch((err: Error) => console.log(err));
+};
 
-// export const postEditProduct: RequestHandler = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   const updatedTitle = req.body.title;
-//   const updatedPrice = req.body.price;
-//   const updatedImageUrl = req.body.imageUrl;
-//   const updatedDesc = req.body.description;
+export const postEditProduct: RequestHandler = (req, res, next) => {
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDesc = req.body.description;
 
-//   const product = new Product(
-//     updatedTitle,
-//     updatedPrice,
-//     updatedDesc,
-//     updatedImageUrl,
-//     prodId
-//   );
-//   product
-//     .save()
-//     .then((result: any) => {
-//       console.log("UPDATED PRODUCT!");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err: Error) => console.log(err));
-// };
+  Product.findById(prodId)
+    .then((product) => {
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.imageUrl= updatedImageUrl;
+      product.description = updatedDesc;
+      return product.save();
+    })
 
-// export const getProducts: RequestHandler = (req, res, next) => {
-//   Product.fetchAll()
-//     .then((products: any) => {
-//       res.render("admin/products", {
-//         prods: products,
-//         pageTitle: "Admin Products",
-//         path: "/admin/products",
-//       });
-//     })
-//     .catch((err: Error) => {
-//       console.log(err);
-//     });
-// };
+    .then((result: any) => {
+      console.log("UPDATED PRODUCT!");
+      res.redirect("/admin/products");
+    })
+    .catch((err: Error) => console.log(err));
+};
 
-// export const postDeleteProduct: RequestHandler = (req, res, next) => {
-//   const prodId = req.body.productId;
-//   Product.deleteById(prodId)
+export const getProducts: RequestHandler = (req, res, next) => {
+  Product.find()
+    .then((products: any) => {
+      res.render("admin/products", {
+        prods: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
+};
 
-//     .then(() => {
-//       console.log("DESTROYED PRODUCT");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err: Error) => {
-//       console.log(err);
-//     });
-// };
+export const postDeleteProduct: RequestHandler = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findByIdAndRemove(prodId)
+
+    .then(() => {
+      console.log("DESTROYED PRODUCT");
+      res.redirect("/admin/products");
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
+};
