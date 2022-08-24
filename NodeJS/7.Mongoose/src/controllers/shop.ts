@@ -20,15 +20,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const prodId = req.params.productId;
-  // Product.findAll({ where: { id: prodId } })
-  //   .then(products => {
-  //     res.render('shop/product-detail', {
-  //       product: products[0],
-  //       pageTitle: products[0].title,
-  //       path: '/products'
-  //     });
-  //   })
-  //   .catch(err => console.log(err));
+ 
   Product.findById(prodId)
     .then((product: any) => {
       res.render("shop/product-detail", {
@@ -41,7 +33,7 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products: any) => {
       res.render("shop/index", {
         prods: products,
