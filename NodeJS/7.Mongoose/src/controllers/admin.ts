@@ -2,8 +2,25 @@ import { RequestHandler } from "express";
 
 const mongoose = require("mongoose");
 
-const { Product } = require("../models/product");
-const { User } = require("../models/user");
+const Product = require("../models/product");
+const User = require("../models/user");
+
+const userTest2: RequestHandler = async (req, res, next) => {
+  const userTest = new User({
+    _id: new mongoose.Types.ObjectId(),
+
+    name: "Omar",
+    email: "omar@test.com",
+    cart: {
+      items: [],
+    },
+  });
+  try {
+    await userTest.save();
+  } catch (err: any) {
+    res.status(err.status).json(err.message);
+  }
+};
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -25,7 +42,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: req.user,
+    userId: userTest2,
   });
 
   product
@@ -85,7 +102,10 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.find()
+    .populate("userId")
     .then((products: any) => {
+      console.log(products);
+
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
