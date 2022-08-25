@@ -8,7 +8,7 @@ import bodyParser from "body-parser";
 const mongoose = require("mongoose");
 
 const errorController = require("./controllers/error");
-// const User = require("./models/user");
+const User = require("./models/user");
 
 const app = express();
 
@@ -26,18 +26,33 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-// app.use((req, res, next) => {
-//   User.findById("63052e4e53d7cb4a02db9e48")
-//     .then((user: any) => {
-//       req.user = new User(user.name, user.email, user.cart, user._id);
-//       next();
-//     })
-//     .catch((err: Error) => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById("6307186716c4b235b430b459")
+    .then((user: any) => {
+      req.user = user;
+      next();
+    })
+    .catch((err: Error) => console.log(err));
+});
 
 mongoose
   .connect(DB_HOST)
   .then(() => console.log("Connected to MongoDB!"))
+  .then((result: any) => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          name: "Omar",
+          email: "omar@test.com",
+          cart: {
+            items: [],
+          },
+        });
+        user.save();
+      }
+    });
+  })
+
   .then(() => {
     app.listen(3000, () => {
       console.log("Server is Running on port 3000!");
