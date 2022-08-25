@@ -1,6 +1,9 @@
 import { RequestHandler } from "express";
 
-const Product = require("../models/product");
+const mongoose = require("mongoose");
+
+const { Product } = require("../models/product");
+const { User } = require("../models/user");
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -17,10 +20,12 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const description = req.body.description;
 
   const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
     title: title,
     price: price,
     description: description,
     imageUrl: imageUrl,
+    userId: req.user,
   });
 
   product
@@ -66,7 +71,7 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
     .then((product) => {
       product.title = updatedTitle;
       product.price = updatedPrice;
-      product.imageUrl= updatedImageUrl;
+      product.imageUrl = updatedImageUrl;
       product.description = updatedDesc;
       return product.save();
     })

@@ -6,11 +6,14 @@ const path = require("path");
 import express, { RequestHandler } from "express";
 import bodyParser from "body-parser";
 const mongoose = require("mongoose");
+const { Product } = require("./models/product");
 
 const errorController = require("./controllers/error");
-const User = require("./models/user");
+const { User } = require("./models/user");
 
 const app = express();
+app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -28,18 +31,20 @@ app.use(errorController.get404);
 
 app.use((req, res, next) => {
   User.findById("6307186716c4b235b430b459")
+    .popultate(Product)
     .then((user: any) => {
       req.user = user;
       next();
+      console.log(user);
     })
     .catch((err: Error) => console.log(err));
 });
 
 mongoose
-  .connect(DB_HOST)
+  .connect(DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB!"))
   .then((result: any) => {
-    User.findOne().then((user) => {
+    User.findOne().then((user: any) => {
       if (!user) {
         const user = new User({
           name: "Omar",
@@ -59,3 +64,5 @@ mongoose
     });
   })
   .catch((err: Error) => console.log(err));
+
+export {};
