@@ -1,6 +1,7 @@
 import express, { RequestHandler } from "express";
 
 const Product = require("../models/product");
+const Order = require("../models/order");
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.find()
@@ -20,7 +21,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const prodId = req.params.productId;
- 
+
   Product.findById(prodId)
     .then((product: any) => {
       res.render("shop/product-detail", {
@@ -48,15 +49,17 @@ export const getIndex: RequestHandler = (req, res, next) => {
 
 export const getCart: RequestHandler = (req, res, next) => {
   req.user
-    .getCart()
-    .then((products) => {
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then((user: any) => {
+      const products = user.cart.items;
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
         products: products,
       });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => console.log(err));
 };
 
 export const postCart: RequestHandler = (req, res, next) => {
@@ -74,26 +77,41 @@ export const postCart: RequestHandler = (req, res, next) => {
 export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   req.user
-    .deleteItemFromCart(prodId)
-    .then((result) => {
+    .removeFromCart(prodId)
+    .then((result: any) => {
       res.redirect("/cart");
     })
-    .catch((err) => console.log(err));
+    .catch((err: any) => console.log(err));
 };
 
 export const postOrder: RequestHandler = (req, res, next) => {
-  // let fetchedCart:any;
   req.user
-    .addOrder()
-    .then((result) => {
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then((user: any) => {
+      const products = user.cart.items.map((i: any) => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          userId: req.user,
+        },
+        products: products,
+      });
+      return order.save();
+    })
+    .then((result: any) => {
+      return req.user.clearCart();
+    })
+    .then(() => {
       res.redirect("/orders");
     })
-    .catch((err) => console.log(err));
+    .catch((err: any) => console.log(err));
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {
-  req.user
-    .getOrders()
+  Order.find({ "user.userId": req.user._id })
     .then((orders: any) => {
       res.render("shop/orders", {
         path: "/orders",
@@ -101,5 +119,7 @@ export const getOrders: RequestHandler = (req, res, next) => {
         orders: orders,
       });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => console.log(err));
 };
+
+export {};

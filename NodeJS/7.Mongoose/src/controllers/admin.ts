@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 const User = require("../models/user");
 
-const userTest2: RequestHandler = async (req, res, next) => {
-  const userTest = new User({
+const userTest: RequestHandler = (req, res, next) => {
+  const userTest2 = new User({
     _id: new mongoose.Types.ObjectId(),
 
     name: "Omar",
@@ -14,12 +14,11 @@ const userTest2: RequestHandler = async (req, res, next) => {
     cart: {
       items: [],
     },
-  });
-  try {
-    await userTest.save();
-  } catch (err: any) {
-    res.status(err.status).json(err.message);
-  }
+  })
+    .then(() => {
+      return userTest2.save();
+    })
+    .catch((err: Error) => console.log(err));
 };
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
@@ -42,7 +41,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: userTest2,
+    userId: userTest,
   });
 
   product
@@ -129,3 +128,5 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
       console.log(err);
     });
 };
+
+export {};
