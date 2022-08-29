@@ -5,10 +5,12 @@ const DB_HOST = process.env.DB_HOST;
 const path = require("path");
 import express, { RequestHandler } from "express";
 import bodyParser from "body-parser";
+import { request } from "http";
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const errorController = require("./controllers/error");
+const csrf = require("csurf");
 
 const User = require("./models/user");
 
@@ -18,6 +20,8 @@ const store = new MongoDBStore({
   uri: DB_HOST,
   collection: "sessions",
 });
+
+const csrfProtection = csrf();
 
 // app.use(express.json());
 
@@ -40,6 +44,7 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -52,6 +57,13 @@ app.use((req, res, next) => {
     })
     .catch((err: any) => console.log(err));
 });
+
+app.use((req, res, next)=>{
+  res.locals.isAuthenticated = req.session.isAuthenticated;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+
+})
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

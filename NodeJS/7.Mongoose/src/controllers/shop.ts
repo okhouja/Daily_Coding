@@ -3,7 +3,6 @@ import express, { RequestHandler } from "express";
 const Product = require("../models/product");
 const Order = require("../models/order");
 
-
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.find()
     .then((products: any) => {
@@ -44,6 +43,7 @@ export const getIndex: RequestHandler = (req, res, next) => {
         pageTitle: "Shop",
         path: "/",
         isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken(),
       });
     })
     .catch((err: Error) => {
@@ -54,13 +54,13 @@ export const getIndex: RequestHandler = (req, res, next) => {
 export const getCart: RequestHandler = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
-    .execPopulate()
+    // .execPopulate()
     .then((user: any) => {
       const products = user.cart.items;
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products:products,
+        products: products,
         // products: user.cart.items.map((product) => {
         //   return { ...product.productId._doc, quantity: product.quantity };
         // }),
@@ -96,7 +96,7 @@ export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
 export const postOrder: RequestHandler = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
-    .execPopulate()
+    // .execPopulate()
     .then((user: any) => {
       const products = user.cart.items.map((i: any) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };

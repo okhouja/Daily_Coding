@@ -6,6 +6,7 @@ declare global {
       user: any;
       isLoggedIn: any;
       session: any;
+      csrfToken: any;
     }
   }
 }
