@@ -4,8 +4,8 @@ declare global {
   namespace Express {
     interface Request {
       user: any;
-      isLoggedIn: any
-
+      isLoggedIn: any;
+      session: any;
     }
   }
 }
