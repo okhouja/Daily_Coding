@@ -1,17 +1,12 @@
 import { RequestHandler } from "express";
-
 const mongoose = require("mongoose");
-
 const Product = require("../models/product");
-// const User = require("../models/user");
-
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    editing: false,
-    isAuthenticated: req.session.isLoggedIn,
+    editing: false,    
   });
 };
 
@@ -57,7 +52,6 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode,
         product: product,
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => console.log(err));
@@ -97,7 +91,6 @@ export const getProducts: RequestHandler = (req, res, next) => {
         prods: products,
         pageTitle: "Admin Products",
         path: "/admin/products",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {

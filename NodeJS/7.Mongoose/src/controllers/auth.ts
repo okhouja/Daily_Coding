@@ -1,22 +1,33 @@
 import { RequestHandler } from "express";
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
-
 const mongoose = require("mongoose");
 
 export const getLogin: RequestHandler = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    errorMessage: req.flash("error"),
+    errorMessage: message,
   });
 };
 
 export const getSignup: RequestHandler = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
-    isAuthenticated: false,
+    errorMessage: message,
   });
 };
 export const postLogin: RequestHandler = (req, res, next) => {
@@ -25,7 +36,7 @@ export const postLogin: RequestHandler = (req, res, next) => {
   User.findOne({ email: email })
     .then((user: any) => {
       if (!user) {
-        req.flash("error", "Invalid email or password.");
+        req.flash("error", "Invalid email or password!");
         return res.redirect("/login");
       }
       bcrypt
@@ -39,6 +50,7 @@ export const postLogin: RequestHandler = (req, res, next) => {
               res.redirect("/");
             });
           }
+          req.flash("error", "Invalid email or password!");
           res.redirect("/login");
         })
         .catch((err: Error) => {
@@ -56,6 +68,7 @@ export const postSignup: RequestHandler = (req, res, next) => {
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {
+        req.flash("error", "Email Already Exists, please try another Email.");
         return res.redirect("/signup");
       }
       return bcrypt
@@ -69,7 +82,7 @@ export const postSignup: RequestHandler = (req, res, next) => {
           });
           return user.save();
         })
-        .then((result) => {
+        .then((result: any) => {
           res.redirect("/login");
         });
     })

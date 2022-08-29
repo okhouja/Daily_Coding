@@ -14,7 +14,6 @@ export const getProducts: RequestHandler = (req, res, next) => {
         prods: products,
         pageTitle: "All Products",
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => {
@@ -31,7 +30,6 @@ export const getProduct: RequestHandler = (req, res, next) => {
         product: product,
         pageTitle: product.title,
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: Error) => console.log(err));
@@ -44,7 +42,6 @@ export const getIndex: RequestHandler = (req, res, next) => {
         prods: products,
         pageTitle: "Shop",
         path: "/",
-        isAuthenticated: req.session.isLoggedIn,
         csrfToken: req.csrfToken(),
       });
     })
@@ -66,7 +63,6 @@ export const getCart: RequestHandler = (req, res, next) => {
         // products: user.cart.items.map((product) => {
         //   return { ...product.productId._doc, quantity: product.quantity };
         // }),
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: any) => console.log(err));
@@ -130,7 +126,6 @@ export const getOrders: RequestHandler = (req, res, next) => {
         path: "/orders",
         pageTitle: "Your Orders",
         orders: orders,
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err: any) => console.log(err));
