@@ -62,20 +62,6 @@ app.use(errorController.get404);
 mongoose
   .connect(DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB!"))
-  .then((result: any) => {
-    User.findOne().then((user:any) => {
-      if (!user) {
-        const user = new User({
-          name: "Omar",
-          email: "omar@test.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
-  })
 
   .then(() => {
     app.listen(3000, () => {

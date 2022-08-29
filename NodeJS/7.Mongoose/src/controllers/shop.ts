@@ -2,7 +2,7 @@ import express, { RequestHandler } from "express";
 
 const Product = require("../models/product");
 const Order = require("../models/order");
-const addToCart = require("../models/user").addToCart;
+
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.find()
@@ -60,9 +60,10 @@ export const getCart: RequestHandler = (req, res, next) => {
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: user.cart.items.map((product) => {
-          return { ...product.productId._doc, quantity: product.quantity };
-        }),
+        products:products,
+        // products: user.cart.items.map((product) => {
+        //   return { ...product.productId._doc, quantity: product.quantity };
+        // }),
         isAuthenticated: req.session.isLoggedIn,
       });
     })

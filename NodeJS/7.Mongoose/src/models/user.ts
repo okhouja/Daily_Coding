@@ -5,12 +5,12 @@ import { Model, Schema, model } from "mongoose";
 const userSchema = new Schema(
   {
     _id: Schema.Types.ObjectId,
-    name: {
+    email: {
       type: String,
       required: true,
       unique: true,
     },
-    email: {
+    password: {
       type: String,
       required: true,
     },

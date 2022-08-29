@@ -5,21 +5,6 @@ const mongoose = require("mongoose");
 const Product = require("../models/product");
 // const User = require("../models/user");
 
-// const userTest: RequestHandler = (req, res, next) => {
-//   const userTest2 = new User({
-//     _id: new mongoose.Types.ObjectId(),
-
-//     name: "Omar",
-//     email: "omar@test.com",
-//     cart: {
-//       items: [],
-//     },
-//   })
-//     .then(() => {
-//       return userTest2.save();
-//     })
-//     .catch((err: Error) => console.log(err));
-// };
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -37,7 +22,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const description = req.body.description;
 
   const product = new Product({
-    // _id: new mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     title: title,
     price: price,
     description: description,
