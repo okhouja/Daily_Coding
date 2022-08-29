@@ -8,7 +8,7 @@ export const getLogin: RequestHandler = (req, res, next) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isAuthenticated: false,
+    errorMessage: req.flash("error"),
   });
 };
 
@@ -25,6 +25,7 @@ export const postLogin: RequestHandler = (req, res, next) => {
   User.findOne({ email: email })
     .then((user: any) => {
       if (!user) {
+        req.flash("error", "Invalid email or password.");
         return res.redirect("/login");
       }
       bcrypt
