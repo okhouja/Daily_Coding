@@ -1,4 +1,6 @@
-import express, { RequestHandler } from "express";
+import { RequestHandler } from "express";
+
+const mongoose = require("mongoose");
 
 const Product = require("../models/product");
 const Order = require("../models/order");
@@ -102,8 +104,10 @@ export const postOrder: RequestHandler = (req, res, next) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       const order = new Order({
+        _id: new mongoose.Types.ObjectId(),
+
         user: {
-          name: req.user.name,
+          email: req.user.email,
           userId: req.user,
         },
         products: products,
