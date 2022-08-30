@@ -139,9 +139,9 @@ export const postReset: RequestHandler = (req, res, next) => {
     }
     const token = buffer.toString("hex");
     console.log(token);
-    
+
     User.findOne({ email: req.body.email })
-      .then((user:any) => {
+      .then((user: any) => {
         if (!user) {
           req.flash("error", "No account with that email found.");
           return res.redirect("/reset");
@@ -150,7 +150,7 @@ export const postReset: RequestHandler = (req, res, next) => {
         user.resetTokenExpiration = Date.now() + 3600000;
         return user.save();
       })
-      .then((result:any) => {
+      .then((result: any) => {
         res.redirect("/");
         sgMail.send({
           to: req.body.email,
@@ -163,10 +163,32 @@ export const postReset: RequestHandler = (req, res, next) => {
           `,
         });
       })
-      .catch((err:Error) => {
+      .catch((err: Error) => {
         console.log(err);
       });
   });
+};
+
+export const getNewPassword: RequestHandler = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+    .then((user: any) => {
+      let message = req.flash("error");
+      if (message.length > 0) {
+        message = message[0];
+      } else {
+        message = null;
+      }
+      res.render("auth/new-password", {
+        path: "/new-password",
+        pageTitle: "New Password",
+        errorMessage: message,
+        userId: user._id.toString(),
+      });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export {};
