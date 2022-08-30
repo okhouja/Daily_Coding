@@ -1,7 +1,11 @@
 import { RequestHandler } from "express";
+
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const mongoose = require("mongoose");
+
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SG_API_KEY);
 
 export const getLogin: RequestHandler = (req, res, next) => {
   let message = req.flash("error");
@@ -84,7 +88,18 @@ export const postSignup: RequestHandler = (req, res, next) => {
         })
         .then((result: any) => {
           res.redirect("/login");
-        });
+          return sgMail.send({
+            to: email,
+            from: "liebelos1@gmail.com",
+            subject: "Signup succeeded!",
+            html: "<h1>You Successfully signed up!</h1>",
+            text: "Welcome to Node.js Shop Dev!",
+          });
+        })
+        .then(() => {
+          console.log("Email sent successfully!");
+        })
+        .catch((err: Error) => console.log(err));
     })
     .catch((err: Error) => {
       console.log(err);

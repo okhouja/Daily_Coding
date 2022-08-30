@@ -2,10 +2,10 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const DB_HOST = process.env.DB_HOST;
 
+
 const path = require("path");
 import express, { RequestHandler } from "express";
 import bodyParser from "body-parser";
-import { request } from "http";
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
