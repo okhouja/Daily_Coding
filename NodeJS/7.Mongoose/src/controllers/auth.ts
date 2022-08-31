@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
 
+import { validationResult } from "express-validator";
+
 const crypto = require("crypto");
 
 const bcrypt = require("bcrypt");
@@ -22,6 +24,11 @@ export const getLogin: RequestHandler = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
+    oldInput: {
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
@@ -36,16 +43,46 @@ export const getSignup: RequestHandler = (req, res, next) => {
     path: "/signup",
     pageTitle: "Signup",
     errorMessage: message,
+    oldInput: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationErrors: [],
   });
 };
 export const postLogin: RequestHandler = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+      },
+      validationErrors: errors.array(),
+    });
+  }
+
   User.findOne({ email: email })
     .then((user: any) => {
       if (!user) {
-        req.flash("error", "Invalid email or password!");
-        return res.redirect("/login");
+        return res.status(422).render("auth/login", {
+          path: "/login",
+          pageTitle: "Login",
+          errorMessage: "Invalid email or password.",
+          oldInput: {
+            email: email,
+            password: password,
+          },
+          validationErrors: [],
+        });
       }
       bcrypt
         .compare(password, user.password)
@@ -58,8 +95,16 @@ export const postLogin: RequestHandler = (req, res, next) => {
               res.redirect("/");
             });
           }
-          req.flash("error", "Invalid email or password!");
-          res.redirect("/login");
+          return res.status(422).render("auth/login", {
+            path: "/login",
+            pageTitle: "Login",
+            errorMessage: "Invalid email or password.",
+            oldInput: {
+              email: email,
+              password: password,
+            },
+            validationErrors: [],
+          });
         })
         .catch((err: Error) => {
           console.log(err);
@@ -73,41 +118,48 @@ export const postSignup: RequestHandler = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      if (userDoc) {
-        req.flash("error", "Email Already Exists, please try another Email.");
-        return res.redirect("/signup");
-      }
-      return bcrypt
-        .hash(password, 12)
-        .then((hashedPassword) => {
-          const user = new User({
-            _id: new mongoose.Types.ObjectId(),
-            email: email,
-            password: hashedPassword,
-            cart: { items: [] },
-          });
-          return user.save();
-        })
-        .then((result: any) => {
-          res.redirect("/login");
-          return sgMail.send({
-            to: email,
-            from: process.env.My_Gmail,
-            subject: "Signup succeeded!",
-            html: "<h1>You Successfully signed up!</h1>",
-            text: "Welcome to Node.js Shop Dev!",
-          });
-        })
-        .then(() => {
-          console.log("Email sent successfully!");
-        })
-        .catch((err: Error) => console.log(err));
-    })
-    .catch((err: Error) => {
-      console.log(err);
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+        confirmPassword: req.body.confirmPassword,
+      },
+      validationErrors: errors.array(),
     });
+  }
+  bcrypt
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      const user = new User({
+        _id: new mongoose.Types.ObjectId(),
+        email: email,
+        password: hashedPassword,
+        cart: { items: [] },
+      });
+      return user.save();
+    })
+    .then((result: any) => {
+      res.redirect("/login");
+      return sgMail.send({
+        to: email,
+        from: process.env.My_Gmail,
+        subject: "Signup succeeded!",
+        html: "<h1>You Successfully signed up!</h1>",
+        text: "Welcome to Node.js Shop Dev!",
+      });
+    })
+    .then(() => {
+      console.log("Email sent successfully!");
+    })
+    .catch((err: Error) => console.log(err));
 };
 
 export const postLogout: RequestHandler = (req, res, next) => {
@@ -132,7 +184,7 @@ export const getReset: RequestHandler = (req, res, next) => {
 };
 
 export const postReset: RequestHandler = (req, res, next) => {
-  crypto.randomBytes(64, (err: any, buffer: any) => {
+  crypto.randomBytes(32, (err: any, buffer: any) => {
     if (err) {
       console.log(err);
       return res.redirect("/reset");
@@ -184,7 +236,7 @@ export const getNewPassword: RequestHandler = (req, res, next) => {
         pageTitle: "New Password",
         errorMessage: message,
         userId: user._id.toString(),
-        passwordToken: token
+        passwordToken: token,
       });
     })
     .catch((err: Error) => {
