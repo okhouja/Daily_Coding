@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { body, validationResult } from "express-validator";
 const mongoose = require("mongoose");
 const Product = require("../models/product");
 
@@ -6,7 +7,10 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    editing: false,    
+    editing: false,
+    hasError: false,
+    errorMessage: null,
+    validationErrors: [],
   });
 };
 
@@ -66,25 +70,27 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
 
   Product.findById(prodId)
     .then((product: any) => {
+      if (product.userId.toString() !== req.user._id.toString()) {
+        return res.redirect("/");
+      }
       product.title = updatedTitle;
       product.price = updatedPrice;
       product.imageUrl = updatedImageUrl;
       product.description = updatedDesc;
-      return product.save();
+      return product.save().then((result: any) => {
+        console.log("UPDATED PRODUCT!");
+        res.redirect("/admin/products");
+      });
     })
 
-    .then((result: any) => {
-      console.log("UPDATED PRODUCT!");
-      res.redirect("/admin/products");
-    })
     .catch((err: Error) => console.log(err));
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.find()
-   // .select('title price -_id')
+  Product.find({ userId: req.user._id })
+    // .select('title price -_id')
     // .populate('userId', 'name')
-    
+
     .then((products: any) => {
       console.log(products);
       res.render("admin/products", {
@@ -100,7 +106,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findByIdAndRemove(prodId)
+  Product.deleteOne({ _id: prodId, userId: req.user._id })
 
     .then(() => {
       console.log("DESTROYED PRODUCT");
