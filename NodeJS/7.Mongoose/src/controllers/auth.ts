@@ -69,7 +69,7 @@ export const postLogin: RequestHandler = (req, res, next) => {
       validationErrors: errors.array(),
     });
   }
-
+  // if no validation errors in the controller
   User.findOne({ email: email })
     .then((user: any) => {
       if (!user) {
@@ -94,17 +94,19 @@ export const postLogin: RequestHandler = (req, res, next) => {
               console.log(err);
               res.redirect("/");
             });
+          } else {
+            // if Password is invalid
+            return res.status(422).render("auth/login", {
+              path: "/login",
+              pageTitle: "Login",
+              errorMessage: "Invalid email or password.",
+              oldInput: {
+                email: email,
+                password: password,
+              },
+              validationErrors: [],
+            });
           }
-          return res.status(422).render("auth/login", {
-            path: "/login",
-            pageTitle: "Login",
-            errorMessage: "Invalid email or password.",
-            oldInput: {
-              email: email,
-              password: password,
-            },
-            validationErrors: [],
-          });
         })
         .catch((err: Error) => {
           console.log(err);
@@ -130,11 +132,13 @@ export const postSignup: RequestHandler = (req, res, next) => {
       oldInput: {
         email: email,
         password: password,
-        confirmPassword: req.body.confirmPassword,
+        confirmPassword: confirmPassword,
       },
       validationErrors: errors.array(),
     });
   }
+  // if no validation errors in the controller
+
   bcrypt
     .hash(password, 12)
     .then((hashedPassword) => {
@@ -148,13 +152,14 @@ export const postSignup: RequestHandler = (req, res, next) => {
     })
     .then((result: any) => {
       res.redirect("/login");
-      return sgMail.send({
+      const msg = {
         to: email,
         from: process.env.My_Gmail,
         subject: "Signup succeeded!",
-        html: "<h1>You Successfully signed up!</h1>",
         text: "Welcome to Node.js Shop Dev!",
-      });
+        html: "<h1>You Successfully signed up!</h1>",
+      };
+      return sgMail.send(msg);
     })
     .then(() => {
       console.log("Email sent successfully!");
@@ -187,24 +192,45 @@ export const postReset: RequestHandler = (req, res, next) => {
   crypto.randomBytes(32, (err: any, buffer: any) => {
     if (err) {
       console.log(err);
-      return res.redirect("/reset");
+      return res.status(422).render("auth/reset", {
+        path: "/reset",
+        pageTitle: "Reset Password",
+        errorMessage: "Invalid email, please enter a different one",
+        oldInput: {
+          email: req.body.email,
+        },
+        validationErrors: [],
+      });
     }
+
+    // if no validation errors in the controller
+
     const token = buffer.toString("hex");
     console.log(token);
 
     User.findOne({ email: req.body.email })
       .then((user: any) => {
+        // if user does not exist
+
         if (!user) {
-          req.flash("error", "No account with that email found.");
-          return res.redirect("/reset");
+          return res.status(422).render("auth/reset", {
+            path: "/reset",
+            pageTitle: "Reset Password",
+            errorMessage: "Unregistered mail, please enter a different one",
+            oldInput: {
+              email: req.body.email,
+            },
+            validationErrors: [],
+          });
         }
+
         user.resetToken = token;
         user.resetTokenExpiration = Date.now() + 3600000;
         return user.save();
       })
       .then((result: any) => {
         res.redirect("/");
-        sgMail.send({
+        const resetMsg = {
           to: req.body.email,
           from: process.env.My_Gmail,
           subject: "Password reset",
@@ -213,7 +239,8 @@ export const postReset: RequestHandler = (req, res, next) => {
             <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password.</p>
             <p>- If someone else triggered this request or if you've remembered your password in the meantime, you can simply ignore this message and carry on using your old password. For security reasons, this link is only valid for 1 hour, after which time you'll need to request a new one.</p>
           `,
-        });
+        };
+        sgMail.send(resetMsg);
       })
       .catch((err: Error) => {
         console.log(err);
