@@ -8,4 +8,12 @@ export const get404: RequestHandler = (req, res, next) => {
   });
 };
 
+export const get500: RequestHandler = (req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error!",
+    path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
+  });
+};
+
 export {};

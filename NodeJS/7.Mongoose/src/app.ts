@@ -2,7 +2,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const DB_HOST = process.env.DB_HOST;
 
-
 const path = require("path");
 import express, { RequestHandler } from "express";
 import bodyParser from "body-parser";
@@ -54,10 +53,15 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
     .then((user: any) => {
+      if (!user) {
+        return next();
+      }
       req.user = user;
       next();
     })
-    .catch((err: any) => console.log(err));
+    .catch((err: any) => {
+      throw new Error(err);
+    });
 });
 
 app.use((req, res, next) => {
@@ -70,6 +74,7 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get("/500", errorController.get500);
 app.use(errorController.get404);
 
 mongoose

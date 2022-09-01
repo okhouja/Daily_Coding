@@ -28,9 +28,9 @@ const validationConditions = [
     .withMessage("Price can be positve value only"),
   check("description")
     .trim()
-    .isLength({ max: 100 })
+    .isLength({ min:10,max: 400 })
     .withMessage(
-      "Please enter a vlid Product desctription, maxium 100 characters long."
+      "Please enter a valid Product desctription,minimum 10 and maximum 400 characters long."
     ),
 ];
 
