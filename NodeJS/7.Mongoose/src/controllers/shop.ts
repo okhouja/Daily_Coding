@@ -16,8 +16,10 @@ export const getProducts: RequestHandler = (req, res, next) => {
         path: "/products",
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
     });
 };
 
@@ -32,7 +34,11 @@ export const getProduct: RequestHandler = (req, res, next) => {
         path: "/products",
       });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
@@ -45,8 +51,10 @@ export const getIndex: RequestHandler = (req, res, next) => {
         csrfToken: req.csrfToken(),
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
     });
 };
 
@@ -65,7 +73,11 @@ export const getCart: RequestHandler = (req, res, next) => {
         // }),
       });
     })
-    .catch((err: any) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const postCart: RequestHandler = (req, res, next) => {
@@ -78,6 +90,11 @@ export const postCart: RequestHandler = (req, res, next) => {
     .then((result: any) => {
       console.log(result);
       res.redirect("/cart");
+    })
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
     });
 };
 
@@ -88,7 +105,11 @@ export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
     .then((result: any) => {
       res.redirect("/cart");
     })
-    .catch((err: any) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const postOrder: RequestHandler = (req, res, next) => {
@@ -116,7 +137,11 @@ export const postOrder: RequestHandler = (req, res, next) => {
     .then(() => {
       res.redirect("/orders");
     })
-    .catch((err: any) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {
@@ -128,7 +153,11 @@ export const getOrders: RequestHandler = (req, res, next) => {
         orders: orders,
       });
     })
-    .catch((err: any) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err);
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export {};

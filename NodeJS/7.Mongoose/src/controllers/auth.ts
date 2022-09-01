@@ -113,7 +113,11 @@ export const postLogin: RequestHandler = (req, res, next) => {
           res.redirect("/login");
         });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const postSignup: RequestHandler = (req, res, next) => {
@@ -164,7 +168,11 @@ export const postSignup: RequestHandler = (req, res, next) => {
     .then(() => {
       console.log("Email sent successfully!");
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const postLogout: RequestHandler = (req, res, next) => {
@@ -242,8 +250,10 @@ export const postReset: RequestHandler = (req, res, next) => {
         };
         sgMail.send(resetMsg);
       })
-      .catch((err: Error) => {
-        console.log(err);
+      .catch((err: any) => {
+        const error = new Error(err)
+        error.code = 500;
+        return next(error);
       });
   });
 };
@@ -266,8 +276,10 @@ export const getNewPassword: RequestHandler = (req, res, next) => {
         passwordToken: token,
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
     });
 };
 
@@ -295,8 +307,10 @@ export const postNewPassword: RequestHandler = (req, res, next) => {
     .then((result: any) => {
       res.redirect("/login");
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
     });
 };
 

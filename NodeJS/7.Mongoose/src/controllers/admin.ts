@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
+import { request } from "http";
 const mongoose = require("mongoose");
 const Product = require("../models/product");
 
@@ -55,7 +56,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
       console.log("Created Product");
       res.redirect("/admin/products");
     })
-    .catch((err: Error) => {
+    .catch((err: any) => {
       // return res.status(500).render('admin/edit-product', {
       //   pageTitle: 'Add Product',
       //   path: '/admin/add-product',
@@ -70,7 +71,10 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
       //   errorMessage: 'Database operation failed, please try again.',
       //   validationErrors: []
       // });
-      res.redirect("/500");
+      // res.status(500).redirect("/500");
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
     });
 };
 
@@ -96,7 +100,11 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
         validationErrors: [],
       });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const postEditProduct: RequestHandler = (req, res, next) => {
@@ -141,7 +149,11 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
       });
     })
 
-    .catch((err: Error) => console.log(err));
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
+    });
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
@@ -157,8 +169,10 @@ export const getProducts: RequestHandler = (req, res, next) => {
         path: "/admin/products",
       });
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
     });
 };
 
@@ -170,8 +184,10 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
       console.log("DESTROYED PRODUCT");
       res.redirect("/admin/products");
     })
-    .catch((err: Error) => {
-      console.log(err);
+    .catch((err: any) => {
+      const error = new Error(err)
+      error.code = 500;
+      return next(error);
     });
 };
 
