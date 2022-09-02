@@ -3,14 +3,14 @@ const User = require("../models/user");
 
 const validationAddProd = [
   body("title").isString().isLength({ min: 3 }).trim(),
-  body("imageUrl").isURL(),
+//   body("imageUrl").isURL(),
   body("price").isFloat(),
   body("description").isLength({ min: 5, max: 400 }).trim(),
 ];
 
 const validationEditProd =   [
     body("title").isString().isLength({ min: 3 }).trim(),
-    body("imageUrl").isURL(),
+    // body("imageUrl").isURL(),
     body("price").isFloat(),
     body("description").isLength({ min: 5, max: 400 }).trim(),
   ]
@@ -21,7 +21,7 @@ const validationConditions = [
     .isLength({ min: 5, max: 50 })
     .trim()
     .withMessage("Title must be at least 5 chars and max 50 chars"),
-  check("imageUrl").isURL().trim().withMessage("Please enter a valid URL link"),
+//   check("imageUrl").isURL().trim().withMessage("Please enter a valid URL link"),
   check("price")
     .isFloat({ min: 0.0, max: 1000000.0 })
     .trim()

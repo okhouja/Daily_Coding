@@ -1,6 +1,10 @@
 import express from "express";
 
 import { body } from "express-validator";
+import multer from "multer";
+
+import { upload, fileStorage, fileFilter } from "../util/multer";
+
 
 // const rootDir = require("../util/path");
 // const path = require("path");
@@ -16,8 +20,17 @@ const {
 
 const router = express.Router();
 
+
+
 // /admin/add-product => GET
 router.get("/add-product", isAuth, adminController.getAddProduct);
+
+
+// router.post(
+//     '/upload',
+//     (upload).single('file'),
+//     (req, res) => res.json({ file: req.file })
+//   )
 
 // /admin/products => GET
 router.get("/products", isAuth, adminController.getProducts);

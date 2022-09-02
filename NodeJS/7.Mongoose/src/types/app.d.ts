@@ -7,8 +7,9 @@ declare global {
       isLoggedIn: any;
       session: any;
       csrfToken: any;
-      flash
+      flash;
     }
   }
 }
+
 

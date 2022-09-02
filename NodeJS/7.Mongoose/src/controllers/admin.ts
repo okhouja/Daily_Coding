@@ -1,8 +1,9 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
-import { request } from "http";
 const mongoose = require("mongoose");
 const Product = require("../models/product");
+
+import { upload, fileStorage, fileFilter } from "../util/multer";
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -17,10 +18,27 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
+  const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
+  if (!image) {
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        price: price,
+        description: description,
+      },
+      errorMessage: "Attached file is not an image.",
+      validationErrors: [],
+    });
+  }
+
   const errors = validationResult(req);
+  const imageUrl = image.path;
 
   if (!errors.isEmpty()) {
     console.log(errors.array());
@@ -72,7 +90,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
       //   validationErrors: []
       // });
       // res.status(500).redirect("/500");
-      const error = new Error(err)
+      const error = new Error(err);
       error.code = 500;
       return next(error);
     });
@@ -101,7 +119,7 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
       });
     })
     .catch((err: any) => {
-      const error = new Error(err)
+      const error = new Error(err);
       error.code = 500;
       return next(error);
     });
@@ -150,7 +168,7 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
     })
 
     .catch((err: any) => {
-      const error = new Error(err)
+      const error = new Error(err);
       error.code = 500;
       return next(error);
     });
@@ -170,7 +188,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
       });
     })
     .catch((err: any) => {
-      const error = new Error(err)
+      const error = new Error(err);
       error.code = 500;
       return next(error);
     });
@@ -185,7 +203,7 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
       res.redirect("/admin/products");
     })
     .catch((err: any) => {
-      const error = new Error(err)
+      const error = new Error(err);
       error.code = 500;
       return next(error);
     });

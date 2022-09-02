@@ -5,12 +5,18 @@ const DB_HOST = process.env.DB_HOST;
 const path = require("path");
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
+
 const mongoose = require("mongoose");
-const session = require("express-session");
+// const session = require("express-session");
+import session from "express-session";
+
 const MongoDBStore = require("connect-mongodb-session")(session);
 const errorController = require("./controllers/error");
 const csrf = require("csurf");
 const flash = require("connect-flash");
+import multer from "multer";
+
+import { fileStorage, fileFilter } from "./util/multer";
 
 const User = require("./models/user");
 
@@ -23,7 +29,30 @@ const store = new MongoDBStore({
 
 const csrfProtection = csrf();
 
+// app.use(upload)
+
 // app.use(express.json());
+
+// const fileStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, new Date().toISOString() + "-" + file.originalname);
+//   },
+// });
+
+// const fileFilter = (req, file, cb) => {
+//   if (
+//     file.mimetype === "image/png" ||
+//     file.mimetype === "image/jpg" ||
+//     file.mimetype === "image/jpeg"
+//   ) {
+//     cb(null, true);
+//   } else {
+//     cb(null, false);
+//   }
+// };
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -33,9 +62,14 @@ const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname, "./upload/images")));
+
 app.use(
   session({
     secret: "my secret",
@@ -75,16 +109,17 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
-app.get("/500", errorController.get500);
+// app.get("/500", errorController.get500);
 app.use(errorController.get404);
+app.use(errorController.get500);
 
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).render("500", {
-    pageTitle: "Error!",
-    path: "/500",
-    isAuthenticated: req.session.isLoggedIn,
-  });
-});
+// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+//   res.status(500).render("500", {
+//     pageTitle: "Error!",
+//     path: "/500",
+//     isAuthenticated: req.session.isLoggedIn,
+//   });
+// });
 
 mongoose
   .connect(DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
