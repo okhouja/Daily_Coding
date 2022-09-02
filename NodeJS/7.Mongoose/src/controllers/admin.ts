@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 const mongoose = require("mongoose");
 const Product = require("../models/product");
+import path from "path";
 
 import { upload, fileStorage, fileFilter } from "../util/multer";
 
@@ -18,7 +19,7 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const title = req.body.title;
-  const image = req.file;
+  const image = req.file.path.replace("\\", "/");
   const price = req.body.price;
   const description = req.body.description;
   if (!image) {
@@ -38,7 +39,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   }
 
   const errors = validationResult(req);
-  const imageUrl = image.path;
+  const imageUrl = req.file?.path.replace("\\" ,"/");
 
   if (!errors.isEmpty()) {
     console.log(errors.array());
