@@ -7,6 +7,11 @@ declare module 'express-session' {
   }
 }
 
+declare module "image" {
+  const value: any;
+  export = value;
+}
+
 export {};
 
 

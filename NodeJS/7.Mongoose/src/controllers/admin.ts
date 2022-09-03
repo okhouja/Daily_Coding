@@ -5,7 +5,7 @@ const Product = require("../models/product");
 import path from "path";
 
 import { upload, fileStorage, fileFilter } from "../util/multer";
-
+type image = HTMLImageElement;
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
@@ -19,7 +19,9 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const title = req.body.title;
-  const image = req.file.path.replace("\\", "/");
+  // const image: any = req.file?.path.replace("\\", "/");
+  const image: any = req.file?.path
+  
   const price = req.body.price;
   const description = req.body.description;
   if (!image) {
@@ -39,7 +41,6 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   }
 
   const errors = validationResult(req);
-  const imageUrl = req.file?.path.replace("\\" ,"/");
 
   if (!errors.isEmpty()) {
     console.log(errors.array());
@@ -50,14 +51,15 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
       hasError: true,
       product: {
         title: title,
-        imageUrl: imageUrl,
         price: price,
         description: description,
       },
-      errorMessage: errors.array()[0].msg,
+      errorMessage: "Attached file is not an image.",
       validationErrors: errors.array(),
     });
   }
+  // const imageUrl = (path as any).image;
+  const imageUrl = req.file?.path.replace("\\" ,"/");
 
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
@@ -130,7 +132,7 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
+  const image = req.file?.path.replace("\\" ,"/");;
   const updatedDesc = req.body.description;
 
   const errors = validationResult(req);
@@ -143,7 +145,6 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
       hasError: true,
       product: {
         title: updatedTitle,
-        imageUrl: updatedImageUrl,
         price: updatedPrice,
         description: updatedDesc,
         _id: prodId,
@@ -160,7 +161,10 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
       }
       product.title = updatedTitle;
       product.price = updatedPrice;
-      product.imageUrl = updatedImageUrl;
+      if (image) {
+        product.imageUrl = req.file?.path;
+      }
+
       product.description = updatedDesc;
       return product.save().then((result: any) => {
         console.log("UPDATED PRODUCT!");

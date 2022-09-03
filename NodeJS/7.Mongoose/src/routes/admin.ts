@@ -3,7 +3,7 @@ import express from "express";
 import { body } from "express-validator";
 import multer from "multer";
 
-import { upload, fileStorage, fileFilter } from "../util/multer";
+import { upload } from "../util/multer";
 
 
 // const rootDir = require("../util/path");
@@ -26,18 +26,13 @@ const router = express.Router();
 router.get("/add-product", isAuth, adminController.getAddProduct);
 
 
-// router.post(
-//     '/upload',
-//     (upload).single('file'),
-//     (req, res) => res.json({ file: req.file })
-//   )
-
 // /admin/products => GET
 router.get("/products", isAuth, adminController.getProducts);
 
 // /admin/edit-product => POST
 router.post(
   "/add-product",
+  // upload.single('image'),
   validationConditions,
   isAuth,
   adminController.postAddProduct
@@ -46,7 +41,7 @@ router.post(
 router.get("/edit-product/:productId", isAuth, adminController.getEditProduct);
 
 router.post(
-  "/edit-product",
+  "/edit-product",upload.single('image'),
   validationConditions,
   isAuth,
   adminController.postEditProduct

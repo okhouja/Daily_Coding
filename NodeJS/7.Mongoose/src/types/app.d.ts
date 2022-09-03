@@ -8,6 +8,8 @@ declare global {
       session: any;
       csrfToken: any;
       flash;
+      path:any
+      process:any
     }
   }
 }
