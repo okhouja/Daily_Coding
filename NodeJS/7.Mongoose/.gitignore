@@ -1,6 +1,8 @@
 node_modules
 dist
+dist/images
 package-lock.json
 .vscode
 .env
+upload
 

@@ -8,8 +8,7 @@ const Order = require("../models/order");
 import PDFDocument from "pdfkit";
 
 import path from "path";
-import fs from 'fs'
-
+import fs from "fs";
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.find()
@@ -166,7 +165,7 @@ export const getOrders: RequestHandler = (req, res, next) => {
     });
 };
 
-exports.getInvoice = (req, res, next) => {
+export const getInvoice: RequestHandler = (req, res, next) => {
   const orderId = req.params.orderId;
   Order.findById(orderId)
     .then((order: any) => {
