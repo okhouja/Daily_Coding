@@ -8,16 +8,19 @@ const guid = uuidv4();
 console.log(path.join(__dirname, "images"));
 // console.log(path.join(__d, "images"));
 
+  // const imagesName = "image-" + guid + multerFile.originalname;
+
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;
 
 export const fileStorage = multer.diskStorage({
+
   destination: (
     req: Request,
     file: Express.Multer.File,
     cb: DestinationCallback
   ): void => {
-    cb(null, path.join("upload"));
+    cb(null, path.join("dist", "upload/"));
   },
   filename: (
     req: Request,

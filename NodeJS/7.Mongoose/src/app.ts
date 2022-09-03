@@ -73,7 +73,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 // app.use( express.static(path.join(__dirname, "images")));
-app.use('/upload', express.static(path.join( 'upload')));
+app.use('/dist/upload', express.static(path.join( __dirname,'upload')));
 // app.use("/images", express.static("images"));
 
 app.use(
