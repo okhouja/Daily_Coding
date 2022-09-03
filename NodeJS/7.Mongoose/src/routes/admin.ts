@@ -41,7 +41,8 @@ router.post(
 router.get("/edit-product/:productId", isAuth, adminController.getEditProduct);
 
 router.post(
-  "/edit-product",upload.single('image'),
+  "/edit-product",
+  // upload.single('image'),
   validationConditions,
   isAuth,
   adminController.postEditProduct

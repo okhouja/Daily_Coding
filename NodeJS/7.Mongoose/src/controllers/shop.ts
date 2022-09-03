@@ -6,6 +6,8 @@ const Product = require("../models/product");
 const Order = require("../models/order");
 
 import PDFDocument from "pdfkit";
+// const PDFDocument = require('pdfkit');
+
 
 import path from "path";
 import fs from "fs";

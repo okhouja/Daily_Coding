@@ -3,7 +3,7 @@ import { validationResult } from "express-validator";
 const mongoose = require("mongoose");
 const Product = require("../models/product");
 import path from "path";
-
+import fileHelper from "../util/file";
 import { upload, fileStorage, fileFilter } from "../util/multer";
 type image = HTMLImageElement;
 export const getAddProduct: RequestHandler = (req, res, next) => {
@@ -54,7 +54,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
         price: price,
         description: description,
       },
-      errorMessage: "Attached file is not an image.",
+      errorMessage:errors.array()[0].msg,
       validationErrors: errors.array(),
     });
   }
@@ -161,11 +161,13 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
       }
       product.title = updatedTitle;
       product.price = updatedPrice;
+      product.description = updatedDesc;
       if (image) {
+        fileHelper.deleteFile(product.imageUrl);
         product.imageUrl = req.file?.path;
       }
 
-      product.description = updatedDesc;
+      
       return product.save().then((result: any) => {
         console.log("UPDATED PRODUCT!");
         res.redirect("/admin/products");
@@ -201,7 +203,14 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteOne({ _id: prodId, userId: req.user._id })
+  Product.findById(prodId)
+    .then(product => {
+      if (!product) {
+        return next(new Error('Product not found.'));
+      }
+      fileHelper.deleteFile(product.imageUrl);
+
+  return Product.deleteOne({ _id: prodId, userId: req.user._id })})
 
     .then(() => {
       console.log("DESTROYED PRODUCT");

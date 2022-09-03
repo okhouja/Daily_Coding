@@ -14,7 +14,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SG_API_KEY);
 
 export const getLogin: RequestHandler = (req, res, next) => {
-  let message = req.flash("error");
+  let message: any= req.flash("error");
   if (message.length > 0) {
     message = message[0];
   } else {
@@ -33,7 +33,7 @@ export const getLogin: RequestHandler = (req, res, next) => {
 };
 
 export const getSignup: RequestHandler = (req, res, next) => {
-  let message = req.flash("error");
+  let message: any= req.flash("error");
   if (message.length > 0) {
     message = message[0];
   } else {
@@ -183,7 +183,7 @@ export const postLogout: RequestHandler = (req, res, next) => {
 };
 
 export const getReset: RequestHandler = (req, res, next) => {
-  let message = req.flash("error");
+  let message: any= req.flash("error");
   if (message.length > 0) {
     message = message[0];
   } else {
@@ -262,7 +262,7 @@ export const getNewPassword: RequestHandler = (req, res, next) => {
   const token = req.params.token;
   User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
     .then((user: any) => {
-      let message = req.flash("error");
+      let message: any= req.flash("error");
       if (message.length > 0) {
         message = message[0];
       } else {
