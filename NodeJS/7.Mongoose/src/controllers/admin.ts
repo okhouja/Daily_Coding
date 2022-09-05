@@ -1,11 +1,9 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
+import fileHelper from "../util/file";
 const mongoose = require("mongoose");
 const Product = require("../models/product");
-import path from "path";
-import fileHelper from "../util/file";
-import { upload, fileStorage, fileFilter } from "../util/multer";
-type image = HTMLImageElement;
+
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
@@ -202,10 +200,10 @@ export const getProducts: RequestHandler = (req, res, next) => {
     });
 };
 
-export const postDeleteProduct: RequestHandler = (req, res, next) => {
-  const prodId = req.body.productId;
+export const deleteProduct: RequestHandler = (req, res, next) => {
+  const prodId = req.params.productId;
   Product.findById(prodId)
-    .then((product) => {
+    .then((product: any) => {
       if (!product) {
         return next(new Error("Product not found."));
       }
@@ -216,12 +214,10 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
 
     .then(() => {
       console.log("DESTROYED PRODUCT");
-      res.redirect("/admin/products");
+      res.status(200).json({ message: "Success!" });
     })
     .catch((err: any) => {
-      const error = new Error(err);
-      error.code = 500;
-      return next(error);
+      res.status(500).json({ message: "Deleting product failed." });
     });
 };
 
