@@ -1,14 +1,9 @@
 import { Request } from "express";
 import multer, { FileFilterCallback } from "multer";
-let multerFile: Express.Multer.File;
-const path = require("path");
+type multerFile = Express.Multer.File;
+import path from "path"
 const { v4: uuidv4 } = require("uuid");
 const guid = uuidv4();
-
-console.log(path.join(__dirname, "images"));
-// console.log(path.join(__d, "images"));
-
-  // const imagesName = "image-" + guid + multerFile.originalname;
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;

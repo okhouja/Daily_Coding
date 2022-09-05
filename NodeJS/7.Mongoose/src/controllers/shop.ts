@@ -8,19 +8,34 @@ const Order = require("../models/order");
 import PDFDocument from "pdfkit";
 // const PDFDocument = require('pdfkit');
 
-
 import path from "path";
 import fs from "fs";
 
-export const getProducts: RequestHandler = (req, res, next) => {
-  Product.find()
-    .then((products: any) => {
-      console.log(products);
+const ITEMS_PER_PAGE = 2;
 
+export const getProducts: RequestHandler = (req, res, next) => {
+  const page = +req.query.page! || 1;
+  let totalItems:any;
+
+  Product.find()
+    .countDocuments()
+    .then((numProducts: any) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
+    .then((products:any) => {
       res.render("shop/product-list", {
         prods: products,
-        pageTitle: "All Products",
+        pageTitle: "Products",
         path: "/products",
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err: any) => {
@@ -49,13 +64,28 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
+  const page = +req.query.page! || 1;
+  let totalItems: any;
+
   Product.find()
+    .countDocuments()
+    .then((numProducts: any) => {
+      totalItems = numProducts;
+      return Product.find()
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     .then((products: any) => {
       res.render("shop/index", {
         prods: products,
         pageTitle: "Shop",
         path: "/",
-        csrfToken: req.csrfToken(),
+        currentPage: page,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err: any) => {
