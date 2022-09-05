@@ -1,8 +1,10 @@
 const My_Stripe = process.env.My_Stripe;
 
 import { RequestHandler } from "express";
-const stripe = require('stripe')(My_Stripe);
 
+import Stripe from "stripe";
+const stripe = new Stripe(My_Stripe as string, { apiVersion: "2022-08-01" });
+console.log(My_Stripe);
 
 const mongoose = require("mongoose");
 
@@ -19,7 +21,7 @@ const ITEMS_PER_PAGE = 2;
 
 export const getProducts: RequestHandler = (req, res, next) => {
   const page = +req.query.page! || 1;
-  let totalItems:any;
+  let totalItems: any;
 
   Product.find()
     .countDocuments()
@@ -29,7 +31,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
         .skip((page - 1) * ITEMS_PER_PAGE)
         .limit(ITEMS_PER_PAGE);
     })
-    .then((products:any) => {
+    .then((products: any) => {
       res.render("shop/product-list", {
         prods: products,
         pageTitle: "Products",
@@ -153,12 +155,12 @@ export const postCartDeleteProduct: RequestHandler = (req, res, next) => {
     });
 };
 
-export const getCheckout :RequestHandler= (req, res, next) => {
-  let products:any;
+export const getCheckout: RequestHandler = (req, res, next) => {
+  let products: any;
   let total = 0;
   req.user
-    .populate('cart.items.productId')
-    .execPopulate()
+    .populate("cart.items.productId")
+    // .execPopulate()
     .then((user: any) => {
       products = user.cart.items;
       total = 0;
@@ -167,27 +169,34 @@ export const getCheckout :RequestHandler= (req, res, next) => {
       });
 
       return stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
+        payment_method_types: ["card"],
         line_items: products.map((p: any) => {
           return {
-            name: p.productId.title,
-            description: p.productId.description,
-            amount: p.productId.price * 100,
-            currency: 'usd',
-            quantity: p.quantity
+            price_data: {
+              currency: "usd",
+              unit_amount: p.productId.price * 100,
+              product_data: {
+                name: p.productId.title,
+                description: p.productId.description,
+              },
+            },
+
+            quantity: p.quantity,
           };
         }),
-        success_url: req.protocol + '://' + req.get('host') + '/checkout/success', // => http://localhost:3000
-        cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+        mode: "payment",
+        success_url:
+          req.protocol + "://" + req.get("host") + "/checkout/success", // => http://localhost:3000
+        cancel_url: req.protocol + "://" + req.get("host") + "/checkout/cancel",
       });
     })
-    .then(session => {
-      res.render('shop/checkout', {
-        path: '/checkout',
-        pageTitle: 'Checkout',
+    .then((session) => {
+      res.render("shop/checkout", {
+        path: "/checkout",
+        pageTitle: "Checkout",
         products: products,
         totalSum: total,
-        sessionId: session.id
+        sessionId: session.id,
       });
     })
     .catch((err: any) => {
@@ -197,20 +206,22 @@ export const getCheckout :RequestHandler= (req, res, next) => {
     });
 };
 
-export const getCheckoutSuccess :RequestHandler= (req, res, next) => {
+export const getCheckoutSuccess: RequestHandler = (req, res, next) => {
   req.user
-    .populate('cart.items.productId')
-    .execPopulate()
+    .populate("cart.items.productId")
+    // .execPopulate()
     .then((user: any) => {
-      const products = user.cart.items.map((i: any)=> {
+      const products = user.cart.items.map((i: any) => {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
       });
       const order = new Order({
+        _id: new mongoose.Types.ObjectId(),
+
         user: {
           email: req.user.email,
-          userId: req.user
+          userId: req.user,
         },
-        products: products
+        products: products,
       });
       return order.save();
     })
@@ -218,7 +229,7 @@ export const getCheckoutSuccess :RequestHandler= (req, res, next) => {
       return req.user.clearCart();
     })
     .then(() => {
-      res.redirect('/orders');
+      res.redirect("/orders");
     })
     .catch((err: any) => {
       const error = new Error(err);
@@ -226,7 +237,6 @@ export const getCheckoutSuccess :RequestHandler= (req, res, next) => {
       return next(error);
     });
 };
-
 
 export const postOrder: RequestHandler = (req, res, next) => {
   req.user

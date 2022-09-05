@@ -1,3 +1,5 @@
+
+
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import fileHelper from "../util/file";
@@ -186,7 +188,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
     // .populate('userId', 'name')
 
     .then((products: any) => {
-      console.log(products);
+      // console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
@@ -201,7 +203,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
 };
 
 export const deleteProduct: RequestHandler = (req, res, next) => {
-  const prodId = req.params.productId;
+  const prodId :any= req.params.productId;
   Product.findById(prodId)
     .then((product: any) => {
       if (!product) {
