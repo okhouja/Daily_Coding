@@ -18,4 +18,6 @@ app.use((req, res, next) => {
 
 app.use('/feed', feedRoutes);
 
-app.listen(8080);
+app.listen(8080, () => {
+    console.log("Server is Running on port 3000!");
+  });
