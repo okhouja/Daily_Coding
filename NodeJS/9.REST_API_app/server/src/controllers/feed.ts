@@ -1,6 +1,9 @@
 import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
+import Post from '../models/post'
 
 export const getPosts: RequestHandler = (req, res, next) => {
+  Post.find().then((posts:any) => {})
   res.status(200).json({
     posts: [{ title: "First Post", content: "This is the first post!" }],
   });
