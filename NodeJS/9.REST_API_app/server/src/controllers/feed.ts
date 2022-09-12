@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Post from "../models/post";
+import  mongoose  from "mongoose";
 
 export const getPosts: RequestHandler = (req, res, next) => {
   Post.find()
@@ -28,6 +29,7 @@ export const createPost: RequestHandler = (req, res, next) => {
   const title = req.body.title;
   const content = req.body.content;
   const post = new Post({
+    _id: new mongoose.Types.ObjectId(),
     title: title,
     content: content,
     imageUrl: "images/book.jpg",
