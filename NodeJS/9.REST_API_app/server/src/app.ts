@@ -12,20 +12,36 @@ import mongoose, { ConnectOptions } from "mongoose";
 
 const feedRoutes = require("./routes/feed");
 
+import multer from "multer";
+
+import { fileStorage, fileFilter } from "./util/multer";
+
+import cors from "cors"
 const app = express();
+
+
+
+
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
+app.use('/images', express.static(path.join("images")));
+
+
+app.use(cors())
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+//   );
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
 
 app.use("/feed", feedRoutes);
 
@@ -36,10 +52,9 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   res.status(status).json({ message: message });
 });
 
-app.listen(8080, () => {
-  console.log("Server is Running on port 3000!");
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome to our app");
 });
-
 mongoose
   .connect(
     DB_HOST as string,
@@ -48,8 +63,8 @@ mongoose
   .then(() => console.log("Connected to MongoDB!"))
 
   .then(() => {
-    app.listen(4000, () => {
-      console.log("Server is Running on port 3000!");
+    app.listen(8080, () => {
+      console.log("Server is Running on port 8080!");
     });
   })
   .catch((err: Error) => console.log(err));

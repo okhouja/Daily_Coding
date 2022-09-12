@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Post from "../models/post";
-import  mongoose  from "mongoose";
+import mongoose from "mongoose";
 
 export const getPosts: RequestHandler = (req, res, next) => {
   Post.find()
@@ -26,13 +26,19 @@ export const createPost: RequestHandler = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
+  if (!req.file) {
+    const error = new Error('No image provided.');
+    error.statusCode = 422;
+    throw error;
+  }
   const title = req.body.title;
+  const imageUrl = req.file?.path.replace(/\\/g, "/");
   const content = req.body.content;
   const post = new Post({
     _id: new mongoose.Types.ObjectId(),
     title: title,
     content: content,
-    imageUrl: "images/book.jpg",
+    imageUrl: imageUrl,
     creator: { name: "Omar" },
   });
   post
@@ -42,6 +48,7 @@ export const createPost: RequestHandler = (req, res, next) => {
         message: "Post created successfully!",
         post: result,
       });
+      console.log(result);
     })
     .catch((err) => {
       if (!err.statusCode) {
