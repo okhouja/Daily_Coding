@@ -3,4 +3,5 @@ declare interface Error {
     message: string
     stack?: string
     statusCode?: number | string
+    data:any
   }

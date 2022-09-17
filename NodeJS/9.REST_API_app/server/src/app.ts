@@ -11,6 +11,8 @@ import bodyParser from "body-parser";
 import mongoose, { ConnectOptions } from "mongoose";
 
 const feedRoutes = require("./routes/feed");
+const authRoutes = require('./routes/auth');
+
 
 import multer from "multer";
 
@@ -44,6 +46,7 @@ app.use(cors())
 // });
 
 app.use("/feed", feedRoutes);
+app.use('/auth', authRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log(error);

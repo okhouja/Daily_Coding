@@ -1,10 +1,10 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
-import Post from "../models/post";
+import Post from "../models/post.model";
+import User from "../models/user.model";
 import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
-import { log } from "console";
 
 export const getPosts: RequestHandler = (req, res, next) => {
   const currentPage: any = req.query.page || 1;
@@ -16,7 +16,8 @@ export const getPosts: RequestHandler = (req, res, next) => {
       totalItems = count;
       return Post.find()
         .skip((currentPage - 1) * perPage)
-        .limit(perPage);
+        .limit(perPage)
+        .populate("creator", "name");
     })
     .then((posts) => {
       res.status(200).json({
@@ -45,24 +46,35 @@ export const createPost: RequestHandler = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
+  const imageUrl = req.file.path;
   const title = req.body.title;
-  const imageUrl = req.file?.path.replace(/\\/g, "/");
   const content = req.body.content;
+  let creator;
   const post = new Post({
     _id: new mongoose.Types.ObjectId(),
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: { name: "Omar" },
+    creator: req.userId,
   });
+  console.log(req.params.userId);
   post
     .save()
     .then((result) => {
+      return User.findById(req.userId);
+    })
+
+    .then((user) => {
+      creator = user;
+      user?.posts.push(post);
+      return user?.save();
+    })
+    .then((result) => {
       res.status(201).json({
         message: "Post created successfully!",
-        post: result,
+        post: post,
+        creator: { _id: creator._id, name: creator.name },
       });
-      console.log(result);
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -75,6 +87,7 @@ export const createPost: RequestHandler = (req, res, next) => {
 export const getPost: RequestHandler = (req, res, next) => {
   const postId = req.params.postId;
   Post.findById(postId)
+    // .populate("creator", "name")
     .then((post) => {
       if (!post) {
         const error = new Error("Could not find post.");
@@ -89,11 +102,6 @@ export const getPost: RequestHandler = (req, res, next) => {
       }
       next(err);
     });
-};
-
-const clearImage = (filePath: any) => {
-  filePath = path.join(filePath);
-  fs.unlink(filePath, (err) => console.log(err));
 };
 
 export const updatePost: RequestHandler = (req, res, next) => {
@@ -122,6 +130,11 @@ export const updatePost: RequestHandler = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
+      if (post.creator?.toString !== req.userId) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 403;
+        throw error;
+      }
       if (imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
       }
@@ -132,7 +145,6 @@ export const updatePost: RequestHandler = (req, res, next) => {
     })
     .then((result) => {
       res.status(200).json({ message: "Post updated!", post: result });
-      
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -151,16 +163,24 @@ export const deletePost: RequestHandler = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
+      if (post.creator?.toString !== req.userId) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 403;
+        throw error;
+      }
       // Check logged in user
       clearImage(post.imageUrl);
       return Post.findByIdAndRemove(postId);
     })
     .then((result) => {
-      console.log(result);
+      return User.findById(req.userId);
+    })
+    .then((user: any) => {
+      user.posts.pull(postId);
+      return user.save();
+    })
+    .then((result) => {
       res.status(200).json({ message: "Deleted post." });
-      console.log(result,"Deleted post.");
-      
-
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -168,4 +188,9 @@ export const deletePost: RequestHandler = (req, res, next) => {
       }
       next(err);
     });
+};
+
+const clearImage = (filePath: any) => {
+  filePath = path.join(filePath);
+  fs.unlink(filePath, (err) => console.log(err));
 };
