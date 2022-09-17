@@ -4,6 +4,7 @@
         post: any;
         save: any;
         posts: any;
+        // user: string | undefined;
 
     }
     // export interface Response {

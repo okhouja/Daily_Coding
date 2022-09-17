@@ -135,7 +135,7 @@ class Feed extends Component {
     let method = 'POST';
     if (this.state.editPost) {
       url = 'http://localhost:8080/feed/post/' + this.state.editPost._id;
-      method = 'POST';
+      method = 'PUT';
     }
 
     fetch(url, {
