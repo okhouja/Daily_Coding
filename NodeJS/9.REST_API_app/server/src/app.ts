@@ -11,19 +11,15 @@ import bodyParser from "body-parser";
 import mongoose, { ConnectOptions } from "mongoose";
 
 const feedRoutes = require("./routes/feed");
-const authRoutes = require('./routes/auth');
-
+const authRoutes = require("./routes/auth");
 
 import multer from "multer";
 
 import { fileStorage, fileFilter } from "./util/multer";
 
-import cors from "cors"
+import cors from "cors";
+import { Socket } from "socket.io";
 const app = express();
-
-
-
-
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
@@ -31,10 +27,9 @@ app.use(bodyParser.json()); // application/json
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
-app.use('/images', express.static(path.join("images")));
+app.use("/images", express.static(path.join("images")));
 
-
-app.use(cors())
+app.use(cors());
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
@@ -46,7 +41,7 @@ app.use(cors())
 // });
 
 app.use("/feed", feedRoutes);
-app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log(error);
@@ -66,8 +61,12 @@ mongoose
   .then(() => console.log("Connected to MongoDB!"))
 
   .then(() => {
-    app.listen(8080, () => {
+    const server = app.listen(8080, () => {
       console.log("Server is Running on port 8080!");
+    });
+    const io = require("socket.io")(server);
+    io.on("connection", (socket) => {
+      console.log("Client connected to server");
     });
   })
   .catch((err: Error) => console.log(err));

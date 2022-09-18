@@ -2,6 +2,7 @@ import { model, Schema, Document, Types } from "mongoose";
 import { IUser } from './user.model';
 
 export interface IPost extends Document {
+  _id: Schema.Types.ObjectId,
   title: string;
   imageUrl: string;
   content: string;
@@ -22,13 +23,13 @@ const postSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
-    creator: [
+    creator: 
       {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
       },
-    ],
+    
   },
   { timestamps: true, versionKey: false }
 );

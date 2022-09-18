@@ -12,11 +12,11 @@ import { validationAddPost } from "../middleware/validation";
 router.get("/posts", isAuth,feedController.getPosts);
 
 // POST /feed/post
-router.post("/post", validationAddPost, feedController.createPost);
+router.post("/post", isAuth, validationAddPost, feedController.createPost);
 
 router.get("/post/:postId", isAuth, feedController.getPost);
 
-router.put("/post/:postId", validationAddPost, feedController.updatePost);
+router.put("/post/:postId",  isAuth,validationAddPost, feedController.updatePost);
 
 router.delete("/post/:postId",  isAuth,feedController.deletePost);
 

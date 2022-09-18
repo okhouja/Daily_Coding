@@ -1,9 +1,9 @@
   declare namespace Express {
     export interface Request {
-        userId: any;
-        post: any;
-        save: any;
-        posts: any;
+        userId?: RequestUserId;
+        // post?: any;
+        // save: any;
+        // posts: any;
         // user: string | undefined;
 
     }

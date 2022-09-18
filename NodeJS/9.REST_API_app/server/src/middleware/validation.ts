@@ -11,11 +11,12 @@ export const validationSignup = [
     body("email")
       .isEmail()
       .withMessage("Please enter a valid email.")
-      .custom(async (value, { req }) => {
-        const userDoc = await User.findOne({ email: value });
-        if (userDoc) {
-          return Promise.reject("E-Mail address already exists!");
-        }
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (userDoc) {
+            return Promise.reject("E-Mail address already exists!");
+          }
+        });
       })
       .normalizeEmail(),
     body("password").trim().isLength({ min: 5 }),
@@ -23,7 +24,5 @@ export const validationSignup = [
   ],
 ];
 
-export const validationStatus = [
-    body("status").trim().not().isEmpty()
-];
+export const validationStatus = [body("status").trim().not().isEmpty()];
 export {};
