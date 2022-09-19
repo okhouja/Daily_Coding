@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 import Post from "../models/post.model";
 import User from "../models/user.model";
 import mongoose, { ObjectId } from "mongoose";
+import io from "../socket";
 import fs from "fs";
 import path from "path";
 
@@ -13,6 +14,7 @@ export const getPosts: RequestHandler = async (req, res, next) => {
     const totalItems = await Post.find().countDocuments();
     const posts = await Post.find()
       .populate("creator")
+      .sort({ createdAt: -1 })
       .skip((currentPage - 1) * perPage)
       .limit(perPage);
 
@@ -56,6 +58,11 @@ export const createPost: RequestHandler = async (req, res, next) => {
     const user: any = await User.findById(req.userId);
     user.posts.push(post);
     await user.save();
+    io.getIO().emit("posts", {
+      action: "create",
+      // post: { ...post._doc, creator: { _id: req.userId, name: user.name } }
+      post: { ...post.toObject(), creator: { _id: req.userId, name: user.name } },
+    });
     res.status(201).json({
       message: "Post created successfully!",
       post: post,
@@ -107,7 +114,7 @@ export const updatePost: RequestHandler = async (req, res, next) => {
     throw error;
   }
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate("creator");
     if (!post) {
       const error = new Error("Could not find post.");
       error.statusCode = 404;
@@ -125,6 +132,7 @@ export const updatePost: RequestHandler = async (req, res, next) => {
     post.imageUrl = imageUrl;
     post.content = content;
     const result = await post.save();
+    io.getIO().emit("posts", { action: "update", post: result });
     res.status(200).json({ message: "Post updated!", post: result });
   } catch (err: any) {
     if (!err.statusCode) {
@@ -155,7 +163,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     const user: any = await User.findById(req.userId);
     user.posts.pull(postId);
     await user.save();
-
+    io.getIO().emit("posts", { action: "delete", post: postId });
     res.status(200).json({ message: "Deleted post." });
   } catch (err: any) {
     if (!err.statusCode) {
