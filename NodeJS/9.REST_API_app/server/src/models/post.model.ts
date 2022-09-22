@@ -1,12 +1,12 @@
 import { model, Schema, Document, Types } from "mongoose";
-import { IUser } from './user.model';
+import { IUser } from "./user.model";
 
 export interface IPost extends Document {
-  _id: Schema.Types.ObjectId,
+  _id: Schema.Types.ObjectId;
   title: string;
   imageUrl: string;
   content: string;
-  creator: IUser['_id'];
+  creator: IUser["_id"];
 }
 const postSchema = new Schema(
   {

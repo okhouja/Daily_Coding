@@ -2,9 +2,16 @@ import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
 import Post from "../models/post.model";
 import User from "../models/user.model";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
+// import * as socketio from "socket.io";
+// const io: socketio.Server = new socketio.Server();
+
 import io from "../socket";
-import fs from "fs";
+
+// import socket from "../socket";
+// const connection = socket.connection();
+
+import { unlink } from "fs";
 import path from "path";
 
 export const getPosts: RequestHandler = async (req, res, next) => {
@@ -43,7 +50,7 @@ export const createPost: RequestHandler = async (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
-  const imageUrl = req.file.path;
+  const imageUrl = req.file.path.replace(/\\/g, "/");
   const title = req.body.title;
   const content = req.body.content;
   const post = new Post({
@@ -58,11 +65,19 @@ export const createPost: RequestHandler = async (req, res, next) => {
     const user: any = await User.findById(req.userId);
     user.posts.push(post);
     await user.save();
-    io.getIO().emit("posts", {
+    // const connection = socket.connection();
+
+    //  if (connection) {
+    io.connection().emit("posts", {
+      // io.getIO().emit("posts", {
       action: "create",
       // post: { ...post._doc, creator: { _id: req.userId, name: user.name } }
-      post: { ...post.toObject(), creator: { _id: req.userId, name: user.name } },
+      post: {
+        ...post.toObject(),
+        creator: { _id: req.userId, name: user.name },
+      },
     });
+    //  }
     res.status(201).json({
       message: "Post created successfully!",
       post: post,
@@ -120,7 +135,7 @@ export const updatePost: RequestHandler = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    if (post.creator.toString() !== req.userId) {
+    if (post.creator._id.toString() !== req.userId) {
       const error = new Error("Not authorized!");
       error.statusCode = 403;
       throw error;
@@ -132,7 +147,8 @@ export const updatePost: RequestHandler = async (req, res, next) => {
     post.imageUrl = imageUrl;
     post.content = content;
     const result = await post.save();
-    io.getIO().emit("posts", { action: "update", post: result });
+
+    io.connection().emit("posts", { action: "update", post: result });
     res.status(200).json({ message: "Post updated!", post: result });
   } catch (err: any) {
     if (!err.statusCode) {
@@ -140,6 +156,14 @@ export const updatePost: RequestHandler = async (req, res, next) => {
     }
     next(err);
   }
+};
+
+const clearImage = (filePath: any) => {
+  filePath = path.join(filePath);
+  unlink(filePath, (err) => {
+    if (err) throw err;
+    // console.log( "Photo Deleted");
+  });
 };
 
 export const deletePost: RequestHandler = async (req, res, next) => {
@@ -151,7 +175,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
       error.statusCode = 404;
       throw error;
     }
-    if (post.creator.toString() !== req.userId) {
+    if (post.creator._id.toString() !== req.userId) {
       const error = new Error("Not authorized!");
       error.statusCode = 403;
       throw error;
@@ -163,7 +187,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     const user: any = await User.findById(req.userId);
     user.posts.pull(postId);
     await user.save();
-    io.getIO().emit("posts", { action: "delete", post: postId });
+    io.connection().emit("posts", { action: "delete", post: postId });
     res.status(200).json({ message: "Deleted post." });
   } catch (err: any) {
     if (!err.statusCode) {
@@ -171,9 +195,4 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     }
     next(err);
   }
-};
-
-const clearImage = (filePath: any) => {
-  filePath = path.join(filePath);
-  fs.unlink(filePath, (err) => console.log(err));
 };
