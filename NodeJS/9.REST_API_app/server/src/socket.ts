@@ -1,14 +1,3 @@
-// import { RequestHandler } from "express";
-
-// import User from "./models/user.model";
-// // const user: any = await User.findById(userId);
-
-// const username: RequestHandler = async (req, res, next) => {
-//   const user = await User.findById(req.userId);
-//   console.log(user);
-  
-//   return user;
-// };
 
 let connection: any = null;
 
@@ -27,14 +16,7 @@ export class Socket {
         credentials: true,
       },
     });
-    // io.use(async (socket, next) => {
-    //   try {
-    //     const user = await User.findOne( username );
-    //     socket.user = user;
-    //   } catch (err) {
-    //     next(new Error("unknown user"));
-    //   }
-    // });
+  
     io.on("connection", (socket: any) => {
       this.socket = socket;
       console.log("Client connected to server", socket.connected);
