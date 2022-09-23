@@ -1,12 +1,13 @@
 import { model, Schema, Document, Types } from "mongoose";
+import { IPost } from "./post.model";
 
 export interface IUser extends Document {
-  _id: Types.ObjectId;
+  _id: Schema.Types.ObjectId;
   email: string;
   password: string;
   name: string;
   status: string;
-  posts: Types.ObjectId;
+  posts: IPost["_id"];
   // posts: any;
   createdAt?: Date;
   updatedAt?: Date;
@@ -41,7 +42,7 @@ const userSchema: Schema = new Schema(
   { timestamps: true, versionKey: false }
 );
 
-  const User = model<IUser>("User", userSchema);
+const User = model<IUser>("User", userSchema);
 export default User;
 
 export {};

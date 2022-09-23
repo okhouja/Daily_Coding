@@ -7,6 +7,8 @@ export interface IPost extends Document {
   imageUrl: string;
   content: string;
   creator: IUser["_id"];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 const postSchema = new Schema(
   {
