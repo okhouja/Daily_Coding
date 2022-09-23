@@ -10,20 +10,23 @@ import bodyParser from "body-parser";
 
 import mongoose, { ConnectOptions } from "mongoose";
 
-const feedRoutes = require("./routes/feed");
-const authRoutes = require("./routes/auth");
-
-import socket from "./socket";
+// const feedRoutes = require("./routes/feed");
+// const authRoutes = require("./routes/auth");
 
 import multer from "multer";
+
+import { graphqlHTTP } from "express-graphql";
+
+import  graphqlSchema  from "./graphql/schema";
+
+import  graphqlResolver  from "./graphql/resolvers";
+
 
 import { fileStorage, fileFilter } from "./util/multer";
 
 import cors from "cors";
 
 const app = express();
-const http = require("http");
-const server = http.createServer(app);
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
@@ -44,8 +47,17 @@ app.use(cors());
 //   next();
 // });
 
-app.use("/feed", feedRoutes);
-app.use("/auth", authRoutes);
+// app.use("/feed", feedRoutes);
+// app.use("/auth", authRoutes);
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql: true
+  })
+);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   console.log(error);
@@ -65,9 +77,8 @@ mongoose
   .then(() => console.log("Connected to MongoDB!"))
 
   .then(() => {
-    server.listen(8080, () => {
+    app.listen(8080, () => {
       console.log("Server is Running on port 8080!");
     });
-    socket.connect(server);
   })
   .catch((err: Error) => console.log(err));
