@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
+import bcrypt from "bcrypt";
 
-const User = require('../models/user');
+import User from '../models/user.model'
 
 export default {
   createUser: async function({ userInput }, req) {
@@ -17,6 +17,6 @@ export default {
       password: hashedPw
     });
     const createdUser = await user.save();
-    return { ...createdUser._doc, _id: createdUser._id.toString() };
+    return { ...createdUser.toObject(), _id: createdUser._id.toString() };
   }
 };
