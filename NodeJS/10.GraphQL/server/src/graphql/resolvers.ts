@@ -1,6 +1,20 @@
 import bcrypt from "bcrypt";
+import mongoose from "mongoose";
+
 
 import User from '../models/user.model'
+
+
+// to test it in localhost:8080/graphql 
+/* 
+mutation {
+  createUser(userInput: {email: "test@test.com", name: "Omar", password: "12345"}) {
+    _id
+    email
+  }
+}
+
+*/
 
 export default {
   createUser: async function({ userInput }, req) {
@@ -12,6 +26,7 @@ export default {
     }
     const hashedPw = await bcrypt.hash(userInput.password, 12);
     const user = new User({
+    _id: new mongoose.Types.ObjectId(),
       email: userInput.email,
       name: userInput.name,
       password: hashedPw
