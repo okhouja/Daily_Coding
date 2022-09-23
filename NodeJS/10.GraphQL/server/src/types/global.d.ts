@@ -4,5 +4,6 @@ declare interface Error {
     stack?: string
     originalError?: number | string
     statusCode?: number | string
+    code?:number
     data:any
   }

@@ -32,6 +32,8 @@ export default {
     }
     if (errors.length > 0) {
       const error = new Error("Invalid input.");
+      errors.data = errors;
+      errors.code= 422
       throw error;
     }
     const existingUser = await User.findOne({ email: userInput.email });

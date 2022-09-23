@@ -55,11 +55,22 @@ app.use(
     schema: graphqlSchema,
     rootValue: graphqlResolver,
     graphiql: true,
-    customFormatErrorFn: (error) => ({
-      message: error.message || "An error occurred.",
-      code: error.originalError?.statusCode || 500,
-      data: error.originalError?.data,
-    }),
+    customFormatErrorFn(err) {
+      if (!err.originalError) {
+        return err;
+      }
+      const data = err.originalError.data;
+      const message = err.message || 'An error occurred.';
+      const code = err.originalError.code || 500;
+      return {
+        message: message,
+        // locations: err.locations,
+        path: err.path,
+        status: code,
+        data: data,
+        stack: err.stack ? err.stack.split('\n') : [],
+      };
+}
   })
 );
 
