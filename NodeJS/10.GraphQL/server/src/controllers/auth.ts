@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { validationResult } from "express-validator";
+// import { validationResult } from "express-validator";
 import mongoose from "mongoose";
 
 import bcrypt from "bcrypt";
@@ -8,13 +8,13 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 
 export const signup: RequestHandler = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error("Validation failed.");
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   const error = new Error("Validation failed.");
+  //   error.statusCode = 422;
+  //   error.data = errors.array();
+  //   throw error;
+  // }
   const email = req.body.email;
   const name = req.body.name;
   const password = req.body.password;

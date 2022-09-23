@@ -17,10 +17,9 @@ import multer from "multer";
 
 import { graphqlHTTP } from "express-graphql";
 
-import  graphqlSchema  from "./graphql/schema";
+import graphqlSchema from "./graphql/schema";
 
-import  graphqlResolver  from "./graphql/resolvers";
-
+import graphqlResolver from "./graphql/resolvers";
 
 import { fileStorage, fileFilter } from "./util/multer";
 
@@ -51,11 +50,16 @@ app.use(cors());
 // app.use("/auth", authRoutes);
 
 app.use(
-  '/graphql',
+  "/graphql",
   graphqlHTTP({
     schema: graphqlSchema,
     rootValue: graphqlResolver,
-    graphiql: true
+    graphiql: true,
+    customFormatErrorFn: (error) => ({
+      message: error.message || "An error occurred.",
+      code: error.originalError?.statusCode || 500,
+      data: error.originalError?.data,
+    }),
   })
 );
 

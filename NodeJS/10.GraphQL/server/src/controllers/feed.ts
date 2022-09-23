@@ -1,5 +1,4 @@
 import { RequestHandler } from "express";
-import { validationResult } from "express-validator";
 import Post from "../models/post.model";
 import User from "../models/user.model";
 import mongoose from "mongoose";
@@ -32,12 +31,12 @@ export const getPosts: RequestHandler = async (req, res, next) => {
 };
 
 export const createPost: RequestHandler = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error("Validation failed, entered data is incorrect.");
-    error.statusCode = 422;
-    throw error;
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   const error = new Error("Validation failed, entered data is incorrect.");
+  //   error.statusCode = 422;
+  //   throw error;
+  // }
   if (!req.file) {
     const error = new Error("No image provided.");
     error.statusCode = 422;
@@ -100,12 +99,12 @@ export const getPost: RequestHandler = async (req, res, next) => {
 
 export const updatePost: RequestHandler = async (req, res, next) => {
   const postId = req.params.postId;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error("Validation failed, entered data is incorrect.");
-    error.statusCode = 422;
-    throw error;
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   const error = new Error("Validation failed, entered data is incorrect.");
+  //   error.statusCode = 422;
+  //   throw error;
+  // }
   const title = req.body.title;
   const content = req.body.content;
   let imageUrl = req.body.image;
