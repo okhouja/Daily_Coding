@@ -21,6 +21,8 @@ import graphqlSchema from "./graphql/schema";
 
 import graphqlResolver from "./graphql/resolvers";
 
+import auth from './middleware/auth'
+
 import { fileStorage, fileFilter } from "./util/multer";
 
 import cors from "cors";
@@ -49,8 +51,7 @@ if (req.method === 'OPTIONS') {
   next();
 });
 
-// app.use("/feed", feedRoutes);
-// app.use("/auth", authRoutes);
+app.use(auth);
 
 app.use(
   "/graphql",

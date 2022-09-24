@@ -2,6 +2,7 @@
     export interface Request {
         userId?: RequestUserId;
         post?: any;
+        isAuth?: boolean;
         // save: any;
         // posts: any;
         // user: string | undefined;
