@@ -94,7 +94,7 @@ export default {
     );
     return { token: token, userId: user._id.toString() };
   },
-  createPost: async function ({ postInput }:{postInput:any}, req:Request) {
+  createPost: async function ({ postInput }: { postInput: any }, req: Request) {
     if (!req.isAuth) {
       const error = new Error("Not authenticated!");
       error.code = 401;
@@ -119,7 +119,7 @@ export default {
       error.code = 422;
       throw error;
     }
-    const user:any = await User.findById(req.userId);
+    const user: any = await User.findById(req.userId);
     if (!user) {
       const error = new Error("Invalid user.");
       error.code = 401;
@@ -140,6 +140,26 @@ export default {
       _id: createdPost._id.toString(),
       createdAt: createdPost.createdAt?.toISOString(),
       updatedAt: createdPost.updatedAt?.toISOString(),
+    };
+  },
+  posts: async function (args: any, req: Request) {
+    if (!req.isAuth) {
+      const error = new Error("Not authenticated!");
+      error.code = 401;
+      throw error;
+    }
+    const totalPosts = await Post.find().countDocuments();
+    const posts = await Post.find().sort({ createdAt: -1 }).populate("creator");
+    return {
+      posts: posts.map((p) => {
+        return {
+          ...p.toObject(),
+          _id: p._id.toString(),
+          createdAt: p.createdAt?.toISOString(),
+          updateAt: p.updatedAt?.toISOString(),
+        };
+      }),
+      totalPosts: totalPosts,
     };
   },
 };
