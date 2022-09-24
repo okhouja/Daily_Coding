@@ -171,4 +171,23 @@ export default {
       totalPosts: totalPosts,
     };
   },
+  post: async function ({ id }: { id: string }, req: Request) {
+    if (!req.isAuth) {
+      const error = new Error("Not authenticated!");
+      error.code = 401;
+      throw error;
+    }
+    const post = await Post.findById(id).populate("creator");
+    if (!post) {
+      const error = new Error("No post found!");
+      error.code = 404;
+      throw error;
+    }
+    return {
+      ...post.toObject(),
+      _id: post._id.toString(),
+      createdAt: post.createdAt?.toISOString(),
+      undefined: post.updatedAt?.toISOString(),
+    };
+  },
 };
