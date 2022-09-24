@@ -142,14 +142,23 @@ export default {
       updatedAt: createdPost.updatedAt?.toISOString(),
     };
   },
-  posts: async function (args: any, req: Request) {
+  posts: async function ({ page }: { page: number }, req: Request) {
     if (!req.isAuth) {
       const error = new Error("Not authenticated!");
       error.code = 401;
       throw error;
     }
+    if (!page) {
+      page = 1;
+    }
+    const perPage = 2;
+
     const totalPosts = await Post.find().countDocuments();
-    const posts = await Post.find().sort({ createdAt: -1 }).populate("creator");
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .populate("creator");
     return {
       posts: posts.map((p) => {
         return {
