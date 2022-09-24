@@ -1,29 +1,21 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 const DB_HOST = process.env.DB_HOST;
-
 const path = require("path");
 
-import express, { Request, Response, NextFunction } from "express";
-
+import express, { Request, Response, NextFunction, application } from "express";
 import bodyParser from "body-parser";
-
 import mongoose, { ConnectOptions } from "mongoose";
 
-// const feedRoutes = require("./routes/feed");
-// const authRoutes = require("./routes/auth");
-
 import multer from "multer";
+import { fileStorage, fileFilter } from "./util/multer";
+import { unlink } from "fs";
 
 import { graphqlHTTP } from "express-graphql";
-
 import graphqlSchema from "./graphql/schema";
-
 import graphqlResolver from "./graphql/resolvers";
 
-import auth from './middleware/auth'
-
-import { fileStorage, fileFilter } from "./util/multer";
+import auth from "./middleware/auth";
 
 import cors from "cors";
 
@@ -45,13 +37,31 @@ app.use((req, res, next) => {
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
   );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-if (req.method === 'OPTIONS') {
-  return res.sendStatus(200);
-}
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
   next();
 });
 
 app.use(auth);
+
+app.put("/post-image", (req, res, next) => {
+  if (!req.isAuth) {
+    throw new Error("Not authenticated!");
+  }
+  if (!req.file) {
+    return res.status(200).json({ message: "No file specified!" });
+  }
+  if (req.body.oldPath) {
+    clearImage(req.body.oldPath);
+  }
+  return res
+    .status(201)
+    .json({
+      message: "Image saved!",
+      filePath: req.file.path.replace(/\\/g, "/"),
+    });
+});
 
 app.use(
   "/graphql",
@@ -64,7 +74,7 @@ app.use(
         return err;
       }
       const data = err.originalError.data;
-      const message = err.message || 'An error occurred.';
+      const message = err.message || "An error occurred.";
       const code = err.originalError.code || 500;
       return {
         message: message,
@@ -72,9 +82,9 @@ app.use(
         path: err.path,
         status: code,
         data: data,
-        stack: err.stack ? err.stack.split('\n') : [],
+        stack: err.stack ? err.stack.split("\n") : [],
       };
-}
+    },
   })
 );
 
@@ -101,3 +111,11 @@ mongoose
     });
   })
   .catch((err: Error) => console.log(err));
+
+const clearImage = (filePath: any) => {
+  filePath = path.join(filePath);
+  unlink(filePath, (err) => {
+    if (err) throw err;
+    // console.log( "Photo Deleted");
+  });
+};
