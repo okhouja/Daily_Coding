@@ -4,3 +4,5 @@ package-lock.json
 .vscode
 .env
 access.log
+server.cert
+server.key
