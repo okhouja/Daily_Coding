@@ -10,6 +10,9 @@ import mongoose, { ConnectOptions } from "mongoose";
 import session from "express-session";
 import helmet from "helmet";
 import compression from "compression";
+// import morgan from "morgan";
+const morgan = require("morgan");
+import fs from "fs";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 const errorController = require("./controllers/error");
@@ -22,6 +25,13 @@ import { fileStorage, fileFilter } from "./util/multer";
 const User = require("./models/user");
 
 const app = express();
+
+const accessLogStream = fs.createWriteStream(
+  path.join("access.log"),
+  { flags: "a" }
+);
+
+app.use(morgan("combined", { stream: accessLogStream }));
 
 const store = new MongoDBStore({
   uri: DB_HOST,
@@ -60,9 +70,10 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
-app.use(helmet());
 
+app.use(helmet());
 app.use(compression());
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 

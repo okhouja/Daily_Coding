@@ -10,6 +10,7 @@ declare global {
       flash;
       path:any
       process:any
+      combined: any
     }
   }
 }
