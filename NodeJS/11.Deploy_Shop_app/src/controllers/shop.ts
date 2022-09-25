@@ -4,7 +4,7 @@ import { RequestHandler } from "express";
 
 import Stripe from "stripe";
 const stripe = new Stripe(My_Stripe as string, { apiVersion: "2022-08-01" });
-console.log(My_Stripe);
+// console.log(My_Stripe);
 
 const mongoose = require("mongoose");
 

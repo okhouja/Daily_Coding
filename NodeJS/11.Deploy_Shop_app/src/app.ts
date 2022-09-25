@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 import mongoose, { ConnectOptions } from "mongoose";
 import session from "express-session";
 import helmet from "helmet";
+import compression from "compression";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 const errorController = require("./controllers/error");
@@ -16,13 +17,11 @@ const csrf = require("csurf");
 const flash = require("connect-flash");
 import multer from "multer";
 
-import {  fileStorage, fileFilter } from "./util/multer";
+import { fileStorage, fileFilter } from "./util/multer";
 
 const User = require("./models/user");
 
 const app = express();
-
-app.use(helmet());
 
 const store = new MongoDBStore({
   uri: DB_HOST,
@@ -30,7 +29,6 @@ const store = new MongoDBStore({
 });
 
 const csrfProtection = csrf();
-
 
 // app.use(express.json());
 
@@ -62,6 +60,10 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
+app.use(helmet());
+
+app.use(compression());
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(
@@ -74,7 +76,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 // app.use( express.static(path.join(__dirname, "images")));
-app.use('/dist/upload', express.static(path.join( __dirname,'upload')));
+app.use("/dist/upload", express.static(path.join(__dirname, "upload")));
 // app.use("/images", express.static("images"));
 
 app.use(
