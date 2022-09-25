@@ -1,6 +1,8 @@
 import { Request } from "express";
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
+import { unlink } from "fs";
+
 import { v4 as uuidv4 } from "uuid";
 const guid = uuidv4();
 
@@ -20,7 +22,9 @@ export const fileStorage = multer.diskStorage({
     file: Express.Multer.File,
     cb: FileNameCallback
   ): void => {
-    cb(null, guid + "_" + file.originalname);
+    // cb(null, guid + "_" + file.originalname);
+    cb(null, new Date().toISOString().replace(/:/g, '.') + '-' + file.originalname);
+
   },
 });
 
@@ -40,6 +44,13 @@ export const fileFilter = (
   }
 };
 
-export const upload = multer({ storage: fileStorage, fileFilter: fileFilter });
+export const clearImage = (filePath: any) => {
+  filePath = path.join(filePath);
+  unlink(filePath, (err) => {
+    if (err) throw err;
+    // console.log( "Photo Deleted");
+  });
+};
+
 
 export {};

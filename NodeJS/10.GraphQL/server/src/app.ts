@@ -9,7 +9,7 @@ import mongoose, { ConnectOptions } from "mongoose";
 
 import multer from "multer";
 import { fileStorage, fileFilter } from "./util/multer";
-import { unlink } from "fs";
+import {clearImage} from "./util/multer";
 
 import { graphqlHTTP } from "express-graphql";
 import graphqlSchema from "./graphql/schema";
@@ -112,10 +112,3 @@ mongoose
   })
   .catch((err: Error) => console.log(err));
 
-const clearImage = (filePath: any) => {
-  filePath = path.join(filePath);
-  unlink(filePath, (err) => {
-    if (err) throw err;
-    // console.log( "Photo Deleted");
-  });
-};
