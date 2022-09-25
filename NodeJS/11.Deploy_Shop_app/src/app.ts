@@ -2,7 +2,8 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const DB_HOST = process.env.DB_HOST;
 
-const path = require("path");
+import path from "path";
+import https from "https";
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 
@@ -26,10 +27,9 @@ const User = require("./models/user");
 
 const app = express();
 
-const accessLogStream = fs.createWriteStream(
-  path.join("access.log"),
-  { flags: "a" }
-);
+const accessLogStream = fs.createWriteStream(path.join("access.log"), {
+  flags: "a",
+});
 
 app.use(morgan("combined", { stream: accessLogStream }));
 
@@ -39,6 +39,9 @@ const store = new MongoDBStore({
 });
 
 const csrfProtection = csrf();
+
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readFileSync("server.cert");
 
 // app.use(express.json());
 
@@ -70,10 +73,8 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
-
 app.use(helmet());
 app.use(compression());
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -150,7 +151,10 @@ mongoose
   .then(() => console.log("Connected to MongoDB!"))
 
   .then(() => {
-    app.listen(3000, () => {
+    // https
+    //   .createServer({ key: privateKey, cert: certificate }, app)
+    //   .listen(process.env.PORT || 3000, () => {
+    app.listen(process.env.PORT || 3000, () => {
       console.log("Server is Running on port 3000!");
     });
   })
