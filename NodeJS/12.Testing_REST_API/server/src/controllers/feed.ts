@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
+import { IGetUserAuthInfoRequest } from "../types/types";
+
 import Post from "../models/post.model";
 import User from "../models/user.model";
 import mongoose from "mongoose";
@@ -33,7 +35,7 @@ export const getPosts: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const createPost: RequestHandler = async (req, res, next) => {
+export const createPost: RequestHandler = async (req:IGetUserAuthInfoRequest, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error("Validation failed, entered data is incorrect.");
@@ -100,7 +102,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updatePost: RequestHandler = async (req, res, next) => {
+export const updatePost: RequestHandler = async (req:IGetUserAuthInfoRequest, res, next) => {
   const postId = req.params.postId;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -157,7 +159,7 @@ const clearImage = (filePath: any) => {
   });
 };
 
-export const deletePost: RequestHandler = async (req, res, next) => {
+export const deletePost: RequestHandler = async (req:IGetUserAuthInfoRequest, res, next) => {
   const postId = req.params.postId;
   try {
     const post = await Post.findById(postId);

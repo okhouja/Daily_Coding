@@ -1,10 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler, Request, Response, NextFunction } from "express";
+import { request } from "http";
+import { IGetUserAuthInfoRequest } from "../types/types";
 import jwt from "jsonwebtoken";
 
-module.exports = (req: Request, res: Response, next: NextFunction) => {
+const  authMiddleware = (
+  req: IGetUserAuthInfoRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
-    const error = new Error("Not authenticated.");
+    const error: any = new Error("Not authenticated.");
     error.statusCode = 401;
     throw error;
   }
@@ -17,7 +23,7 @@ module.exports = (req: Request, res: Response, next: NextFunction) => {
     throw err;
   }
   if (!decodedToken) {
-    const error = new Error("Not authenticated.");
+    const error: any = new Error("Not authenticated.");
     error.statusCode = 401;
     throw error;
   }
@@ -25,3 +31,8 @@ module.exports = (req: Request, res: Response, next: NextFunction) => {
   req.userId = decodedToken.userId;
   next();
 };
+
+export default authMiddleware
+// export function bind(arg0: undefined, req: { get: (headerName: any) => null; }, arg2: {}, arg3: () => void): any {
+//     throw new Error("Function not implemented.");
+// }

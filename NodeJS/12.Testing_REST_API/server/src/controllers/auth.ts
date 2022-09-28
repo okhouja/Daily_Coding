@@ -1,5 +1,7 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
+import { IGetUserAuthInfoRequest } from "../types/types";
+
 import mongoose from "mongoose";
 
 import bcrypt from "bcrypt";
@@ -71,7 +73,7 @@ export const login: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getUserStatus: RequestHandler = async (req, res, next) => {
+export const getUserStatus: RequestHandler = async (req:IGetUserAuthInfoRequest, res, next) => {
   try {
     const user = await User.findById(req.userId);
     if (!user) {
@@ -88,7 +90,7 @@ export const getUserStatus: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updateUserStatus: RequestHandler = async (req, res, next) => {
+export const updateUserStatus: RequestHandler = async (req:IGetUserAuthInfoRequest, res, next) => {
   const newStatus = req.body.status;
   try {
     const user = await User.findById(req.userId);
