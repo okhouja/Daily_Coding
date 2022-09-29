@@ -1,7 +1,8 @@
+ // @ts-ignore
 import { Application } from "https://deno.land/x/oak/mod.ts";
 
-import todosRoutes from './routes/todos.ts';
-import { connect } from './helpers/db_client.ts';
+import todosRoutes from './routes/todos';
+import { connect } from './helpers/db_client';
 
 connect();
 

@@ -1,7 +1,10 @@
+ // @ts-ignore
 import { Router } from 'https://deno.land/x/oak/mod.ts';
-import { ObjectId } from 'https://deno.land/x/mongo@v0.8.0/mod.ts';
+ // @ts-ignore
 
-import { getDb } from '../helpers/db_client.ts';
+import { ObjectId } from 'https://deno.land/x/mongo@LATEST_VERSION/mod.ts';
+
+import { getDb } from '../helpers/db_client';
 
 const router = new Router();
 

@@ -1,3 +1,5 @@
+ // @ts-ignore
+
 import { MongoClient, Database } from 'https://deno.land/x/mongo@v0.8.0/mod.ts';
 
 let db: Database;
