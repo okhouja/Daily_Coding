@@ -69,9 +69,10 @@ app.get("/people", async (req, res) => {
 
 mongoose.connect(
   // use it when mongodb local install
-  // 'mongodb://host.docer.internal:27017/swfavorites', 172.17.0.2
+  // 'mongodb://host.docer.internal:27017/swfavorites', 
   // use ip address when run container with mongodb running
-  "mongodb://172.17.0.2:27017/swfavorites",
+  // Best Solution is using the name we created for mongodb container when we created Network
+  "mongodb://mongodb:27017/swfavorites",
   { useNewUrlParser: true, useUnifiedTopology: true },
 
   (err) => {
