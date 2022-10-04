@@ -22,4 +22,6 @@ CMD ["node", "app.js"]
 
 # docker build -t goals-node .
 
-# docker run --name goals-backend --rm goals-node
+# docker run --name goals-backend --rm -d -p 80:80 goals-node
+
+# docker run --name goals-backend -d --rm -p 80:80 --network goals-net goals-node:v2
