@@ -62,7 +62,7 @@ app.post('/goals', async (req, res) => {
     res
       .status(201)
       .json({ message: 'Goal saved', goal: { id: goal.id, text: goalText } });
-    console.log('STORED NEW GOAL');
+    console.log('STORED NEW GOAL!@!');
   } catch (err) {
     console.error('ERROR FETCHING GOALS');
     console.error(err.message);
@@ -75,7 +75,7 @@ app.delete('/goals/:id', async (req, res) => {
   try {
     await Goal.deleteOne({ _id: req.params.id });
     res.status(200).json({ message: 'Deleted goal!' });
-    console.log('DELETED GOAL');
+    console.log('DELETED GOAL!');
   } catch (err) {
     console.error('ERROR FETCHING GOALS');
     console.error(err.message);
@@ -84,7 +84,7 @@ app.delete('/goals/:id', async (req, res) => {
 });
 
 mongoose.connect(
-  'mongodb://mongodb:27017/course-goals',
+  `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@mongodb:27017/course-goals?authSource=admin`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -94,7 +94,7 @@ mongoose.connect(
       console.error('FAILED TO CONNECT TO MONGODB');
       console.error(err);
     } else {
-      console.log('CONNECTED TO MONGODB');
+      console.log('CONNECTED TO MONGODB!');
       app.listen(80);
     }
   }

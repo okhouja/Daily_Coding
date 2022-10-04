@@ -22,4 +22,5 @@ CMD [ "npm","start" ]
 # 
 #  docker run --name goals-backend -d --rm --network goals-net goals-node
 
-# docker run --name goals-frontend --rm -it -p 3000:3000  goals-react
+# to run react on windows with live changes
+# docker run --name goals-frontend --rm -it -p 3000:3000 -e CHOKIDAR_USEPOLLING=true  goals-react
