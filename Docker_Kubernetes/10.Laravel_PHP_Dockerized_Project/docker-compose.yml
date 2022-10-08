@@ -29,8 +29,6 @@ services:
       dockerfile: composer.dockerfile
     volumes:
       - ./src:/var/www/html
-
-  # to run composer util container : docker-compose run --rm  composer create-project --prefer-dist laravel/laravel .  
   artisan:
     build: 
       context: .
@@ -44,4 +42,12 @@ services:
     entrypoint: ["npm"]
     volumes:
       - ./src:/var/www/html
+
+# to run composer util container for Laravel & php: 
+# docker-compose run --rm  composer create-project --prefer-dist laravel/laravel . 
+# docker-compose run --rm  composer install
+# change sql environments in  .env in src directory 
+# docker-compose up  --build server
+# docker-compose run --rm artisan migrate
+
 
