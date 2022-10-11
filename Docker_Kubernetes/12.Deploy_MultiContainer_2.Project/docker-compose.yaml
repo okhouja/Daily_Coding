@@ -1,11 +1,11 @@
 version: '3.8'
 services:
-  mongodb:
-    image: 'mongo'
-    volumes:
-      - data:/data/db
-    env_file:
-      - ./env/mongo.env
+  # mongodb:
+  #   image: 'mongo'
+  #   volumes:
+  #     - data:/data/db
+  #   env_file:
+  #     - ./env/mongo.env
   backend:
     build: ./backend
     ports:
@@ -15,8 +15,26 @@ services:
       - /app/node_modules
     env_file:
       - ./env/backend.env
-    depends_on:
-      - mongodb
+    # depends_on:
+    #   - mongodb
+  frontend:
+    build:
+      context: ./frontend
+      target: development
 
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
 volumes:
   data:
+  logs:
+
