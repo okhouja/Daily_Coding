@@ -40,3 +40,9 @@ CMD [ "node", "app.js" ]
 
 # to go back to specified deployment version
 # kubectl rollout undo deployment/first-app --to-revision=1
+
+# to delete deployment
+# kubectl delete deployment/first-app
+
+# to delete service
+# kubectl delete service first-app
