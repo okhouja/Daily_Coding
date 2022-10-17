@@ -19,5 +19,11 @@ spec:
           image: omar0940/kub-first-app:v2
           # - name: ...
           #   image: ...
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            peroidSecond:10
+            initialDelaySeconds:5
          
 # kubectl apply -f ./deployment.yaml

@@ -28,21 +28,27 @@ spec:
   selector:
     matchLabels:
       app: second-app
-      tier: backend
+      # tier: backend
     # matchExpressions:
     #   - {key: app, operator: In, value: [second-app, first-app]}
   template:
     metadata:
       labels:
         app: second-app
-        tier: backend
+        # tier: backend
     spec:
       containers:
         - name: second-node
           image: omar0940/kub-first-app:v2
-          # - name: ...
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080            
+            initialDelaySeconds: 5
+            periodSeconds: 10
+           # - name: ...
           #   image: ...
-         
 # kubectl apply -f master-deployment.yaml
 
 # to delete the deployment and service not the yaml file 
