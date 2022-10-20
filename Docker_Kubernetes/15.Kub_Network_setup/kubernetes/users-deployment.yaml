@@ -18,7 +18,4 @@ spec:
           env:
           - name: AUTH_ADDRESS
             value: localhost
-        - name: auth
-          image: omar0940/kub-demo-auth:latest
-          
 
