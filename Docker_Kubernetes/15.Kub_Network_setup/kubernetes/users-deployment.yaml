@@ -17,5 +17,6 @@ spec:
           image: omar0940/kub-demo-users:latest
           env:
           - name: AUTH_ADDRESS
-            value: localhost
+            # value: '10.104.120.174'
+            value: "auth-service.default"
 
