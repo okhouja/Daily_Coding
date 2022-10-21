@@ -27,9 +27,12 @@ spec:
     spec:
       containers:
         - name: users-api
-          image: academind/kub-dep-users:latest
+          image: omar0940/kub-dep-users:latest
           env:
             - name: MONGODB_CONNECTION_URI
-              value: 'mongodb+srv://maximilian:wk4nFupsbntPbB3l@cluster0.ntrwp.mongodb.net/users?retryWrites=true&w=majority'
+             valueFrom:
+                configMapKeyRef:
+                  name: MongoDB-URI-env
+                  key: Mongo_URI
             - name: AUTH_API_ADDRESSS
               value: 'auth-service.default:3000'
