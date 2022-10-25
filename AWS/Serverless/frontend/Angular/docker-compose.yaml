@@ -1,0 +1,13 @@
+version: '3.8'
+services: 
+  frontend:
+    build: ./
+    ports:
+      - '4200:4200'    
+    volumes:
+      - ./src:/app/src
+    stdin_open: true
+    tty: true
+
+volumes:
+  data:  
