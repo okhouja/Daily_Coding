@@ -1,55 +1,74 @@
 const AWS = require("aws-sdk");
-
 const dynamodb = new AWS.DynamoDB({
   region: "us-east-2",
   apiVersion: "2012-08-10",
 });
 
-exports.handler = async (event) => {
+const cisp = new AWS.CognitoIdentityServiceProvider({
+  apiVersion: "2016-04-18",
+});
+
+exports.handler = (event, context, callback) => {
+  const accessToken = event.accessToken;
+
   const type = event.type;
   if (type == "all") {
     const params = {
       TableName: "compare-yourself",
     };
-
-    try {
-      const data = await dynamodb.scan(params).promise();
-      console.log(data);
-      const items = data.Items.map((dataField) => {
-        return {
-          age: +dataField.Age.N,
-          height: +dataField.Height.N,
-          income: +dataField.Income.N,
-        };
-      });
-      console.log(items);
-    } catch (err) {
-      return { statusCode: 500, body: err };
-    }
+    dynamodb.scan(params, function (err, data) {
+      if (err) {
+        console.log(err);
+        callback(err);
+      } else {
+        console.log(data);
+        const items = data.Items.map((dataField) => {
+          return {
+            age: +dataField.Age.N,
+            height: +dataField.Height.N,
+            income: +dataField.Income.N,
+          };
+        });
+        callback(null, items);
+      }
+    });
   } else if (type == "single") {
-    const params = {
-      Key: {
-        "UserId": {
-          S: "user_0.5813644137697216",
-        },
-      },
-      TableName: "compare-yourself",
+    const cisParams = {
+      AccessToken: accessToken,
     };
-    try {
-      const data = await dynamodb.getItem(params).promise();
-      console.log(data);
-      const items = data.Items.map((dataField) => {
-        return {
-          age: +dataField.Age.N,
-          height: +dataField.Height.N,
-          income: +dataField.Income.N,
+    cisp.getUser(cisParams, (err, result) => {
+      if (err) {
+        console.log(err);
+        callback(err);
+      } else {
+        console.log(result);
+        const userId = result.UserAttributes[0].Value;
+        const params = {
+          Key: {
+            UserId: {
+              S: userId,
+            },
+          },
+          TableName: "compare-yourself",
         };
-      });
-      console.log(items);
-    } catch (err) {
-      return { statusCode: 500, body: err };
-    }
+        dynamodb.getItem(params, function (err, data) {
+          if (err) {
+            console.log(err);
+            callback(err);
+          } else {
+            console.log(data);
+            callback(null, [
+              {
+                age: +data.Item.Age.N,
+                height: +data.Item.Height.N,
+                income: +data.Item.Income.N,
+              },
+            ]);
+          }
+        });
+      }
+    });
   } else {
-    console.log("Hello from Lambda & something went wrong");
+    callback("Something went wrong!");
   }
 };
