@@ -8,12 +8,12 @@
     "test": "vitest"
   },
   "keywords": [],
-  "author": "Maximilian Schwarzmüller",
+  "author": "Omar",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2"
   },
   "devDependencies": {
-    "vitest": "^0.24.5"
+    "vitest": "^0.25.1"
   }
 }
