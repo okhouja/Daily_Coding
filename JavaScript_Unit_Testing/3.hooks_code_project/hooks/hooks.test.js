@@ -1,47 +1,51 @@
-import { it, expect } from 'vitest';
+import { it, expect, beforeAll, beforeEach, afterAll, afterEach } from "vitest";
 
-import { User } from './hooks';
+import { User } from "./hooks";
 
-it('should update the email', () => {
-  const testEmail = 'test@test.com';
-  const newTestEmail = 'test2@test.com';
+const testEmail = "test@test.com";
+let user;
 
-  const user = new User(testEmail);
+beforeAll(() => {
+  user = new User(testEmail)
+  console.log('beforeAll');
+})
+beforeEach(() => {
+  user = new User(testEmail);
+
+  console.log('beforeEach');
+})
+afterAll(() => {
+  console.log('afterAll');
+})
+afterEach(() => {
+  // user = new User(testEmail);
+  console.log('afterEach');
+})
+
+it("should update the email", () => {
+  const newTestEmail = "test2@test.com";
+
   user.updateEmail(newTestEmail);
 
   expect(user.email).toBe(newTestEmail);
 });
 
-it('should have an email property', () => {
-  const testEmail = 'test@test.com';
-
-  const user = new User(testEmail);
-
-  expect(user).toHaveProperty('email');
+it("should have an email property", () => {
+  expect(user).toHaveProperty("email");
 });
 
-it('should store the provided email value', () => {
-  const testEmail = 'test@test.com';
-
-  const user = new User(testEmail);
-
+it("should store the provided email value", () => {
   expect(user.email).toBe(testEmail);
 });
 
-it('should clear the email', () => {
-  const testEmail = 'test@test.com';
-
-  const user = new User(testEmail);
+it("should clear the email", () => {
   user.clearEmail();
 
-  expect(user.email).toBe('');
+  expect(user.email).toBe("");
 });
 
-it('should still have an email property after clearing the email', () => {
-  const testEmail = 'test@test.com';
-
-  const user = new User(testEmail);
+it("should still have an email property after clearing the email", () => {
   user.clearEmail();
 
-  expect(user).toHaveProperty('email');
+  expect(user).toHaveProperty("email");
 });
