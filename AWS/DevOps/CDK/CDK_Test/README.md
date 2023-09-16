@@ -13,3 +13,10 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `cdk deploy`      deploy this stack to your default AWS account/region
 * `cdk diff`        compare deployed stack with current state
 * `cdk synth`       emits the synthesized CloudFormation template
+
+
+<!-- to destroy -->
+<!-- 
+cdk destroy
+aws s3 rm --recursive s3://$(aws s3 ls | grep cdktoolkit | cut -d' ' -f3) # empty the cdktoolkit staging bucket
+aws cloudformation delete-stack --stack-name CDKToolkit -->
