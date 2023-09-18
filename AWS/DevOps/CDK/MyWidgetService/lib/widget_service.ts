@@ -1,17 +1,26 @@
-import * as core from "@aws-cdk/core";
-import * as apigateway from "@aws-cdk/aws-apigateway";
-import * as lambda from "@aws-cdk/aws-lambda";
-import * as s3 from "@aws-cdk/aws-s3";
+// import * as core from "@aws-cdk/core";
+import * as core from 'aws-cdk-lib';
 
-export class WidgetService extends core.Construct {
-  constructor(scope: core.Construct, id: string) {
+// import * as apigateway from "@aws-cdk/aws-apigateway";
+// import * as lambda from "@aws-cdk/aws-lambda";
+// import * as s3 from "@aws-cdk/aws-s3";
+
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as s3 from "aws-cdk-lib/aws-s3";
+
+import { Construct } from 'constructs';
+
+
+export class WidgetService extends Construct {
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     const bucket = new s3.Bucket(this, "WidgetStore");
 
     const handler = new lambda.Function(this, "WidgetHandler", {
       runtime: lambda.Runtime.NODEJS_10_X, // So we can use async in widget.js
-      code: lambda.Code.asset("resources"),
+      code: lambda.Code.fromAsset("resources"),
       handler: "widgets.main",
       environment: {
         BUCKET: bucket.bucketName
