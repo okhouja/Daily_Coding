@@ -23,7 +23,7 @@ exports[`dlq creates an alarm 1`] = `
         "EvaluationPeriods": 1,
         "MetricName": "MyMetric",
         "Namespace": "MyNamespace",
-        "Period": 300,
+        "Period": 360,
         "Statistic": "Average",
         "Threshold": 1,
       },
