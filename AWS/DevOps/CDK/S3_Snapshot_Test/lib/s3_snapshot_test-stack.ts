@@ -1,14 +1,3 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Construct } from 'constructs';
-// // import * as sqs from 'aws-cdk-lib/aws-sqs';
-
-// export class S3SnapshotTestStack extends cdk.Stack {
-//   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-//     super(scope, id, props);
-  
-//   }
-// }
-
 import { Stack, StackProps } from 'aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
@@ -20,12 +9,11 @@ export class S3SnapshotTestStack extends Stack {
 
     new s3.Bucket(this, "snapshotdemobucket", {
       versioned: true,
-      bucketName: "snapshot-demo-bucket",
       objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_PREFERRED,
       encryption: s3.BucketEncryption.S3_MANAGED,
       lifecycleRules: [
         {
-          expiration: cdk.Duration.days(30)
+          expiration: cdk.Duration.days(25)
         }
       ],
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,

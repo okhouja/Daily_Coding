@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`S3 Bucket created 1`] = `
+exports[`dlq creates an alarm 1`] = `
 {
   "Parameters": {
     "BootstrapVersion": {
@@ -10,45 +10,24 @@ exports[`S3 Bucket created 1`] = `
     },
   },
   "Resources": {
-    "snapshotdemobucketDE12A84C": {
-      "DeletionPolicy": "Delete",
+    "Alarm7103F465": {
       "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "SSEAlgorithm": "AES256",
-              },
-            },
-          ],
-        },
-        "LifecycleConfiguration": {
-          "Rules": [
-            {
-              "ExpirationInDays": 25,
-              "Status": "Enabled",
-            },
-          ],
-        },
-        "OwnershipControls": {
-          "Rules": [
-            {
-              "ObjectOwnership": "BucketOwnerPreferred",
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-        "VersioningConfiguration": {
-          "Status": "Enabled",
-        },
+        "AlarmDescription": "There are messages in the Dead Letter Queue",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "MyDimension",
+            "Value": "MyDimensionValue",
+          },
+        ],
+        "EvaluationPeriods": 1,
+        "MetricName": "MyMetric",
+        "Namespace": "MyNamespace",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": 1,
       },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Delete",
+      "Type": "AWS::CloudWatch::Alarm",
     },
   },
   "Rules": {
