@@ -1,17 +1,18 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as S3SnapshotTest from '../lib/s3_snapshot_test-stack';
+import { Template } from "aws-cdk-lib/assertions"
+import { App } from 'aws-cdk-lib/core';
+import { S3SnapshotTestStack } from '../lib/s3_snapshot_test-stack';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/s3_snapshot_test-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new S3SnapshotTest.S3SnapshotTestStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+// Snapshot test
+test("S3 Bucket created", () => {
+  // Instantiate the cdk app
+  const app = new App();
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+  // Create S3 Stack
+  const cdkS3Stack = new S3SnapshotTestStack(app, "CdkS3Stack");
+
+  // Prepare the stack for assertions
+  const template = Template.fromStack(cdkS3Stack);
+
+  // Match with Snapshot
+  expect(template.toJSON()).toMatchSnapshot();
 });

@@ -1,16 +1,35 @@
+// import * as cdk from 'aws-cdk-lib';
+// import { Construct } from 'constructs';
+// // import * as sqs from 'aws-cdk-lib/aws-sqs';
+
+// export class S3SnapshotTestStack extends cdk.Stack {
+//   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+//     super(scope, id, props);
+  
+//   }
+// }
+
+import { Stack, StackProps } from 'aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { aws_s3 as s3 } from 'aws-cdk-lib';
 
-export class S3SnapshotTestStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export class S3SnapshotTestStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'S3SnapshotTestQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    new s3.Bucket(this, "snapshotdemobucket", {
+      versioned: true,
+      bucketName: "snapshot-demo-bucket",
+      objectOwnership: s3.ObjectOwnership.BUCKET_OWNER_PREFERRED,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      lifecycleRules: [
+        {
+          expiration: cdk.Duration.days(30)
+        }
+      ],
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
   }
 }
