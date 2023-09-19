@@ -14,3 +14,11 @@ coverage
 .nycrc
 .LAST_PACKAGE
 *.snk
+
+*.js
+!jest.config.js
+package-lock.json
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
