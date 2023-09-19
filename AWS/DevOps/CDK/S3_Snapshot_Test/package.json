@@ -1,8 +1,8 @@
 {
-  "name": "testing_constructs",
+  "name": "s3_snapshot_test",
   "version": "0.1.0",
   "bin": {
-    "testing_constructs": "bin/testing_constructs.js"
+    "s3_snapshot_test": "bin/s3_snapshot_test.js"
   },
   "scripts": {
     "build": "tsc",

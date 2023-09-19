@@ -1,13 +1,13 @@
 // import * as cdk from 'aws-cdk-lib';
 // import { Template } from 'aws-cdk-lib/assertions';
-// import * as TestingConstructs from '../lib/testing_constructs-stack';
+// import * as S3SnapshotTest from '../lib/s3_snapshot_test-stack';
 
 // example test. To run these tests, uncomment this file along with the
-// example resource in lib/testing_constructs-stack.ts
+// example resource in lib/s3_snapshot_test-stack.ts
 test('SQS Queue Created', () => {
 //   const app = new cdk.App();
 //     // WHEN
-//   const stack = new TestingConstructs.TestingConstructsStack(app, 'MyTestStack');
+//   const stack = new S3SnapshotTest.S3SnapshotTestStack(app, 'MyTestStack');
 //     // THEN
 //   const template = Template.fromStack(stack);
 
