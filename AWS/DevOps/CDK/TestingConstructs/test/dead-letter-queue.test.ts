@@ -1,4 +1,5 @@
 // import * as cdk from 'aws-cdk-lib';
+// import '@aws-cdk/assert/jest';
 import { Template } from 'aws-cdk-lib/assertions';
 import {App } from 'aws-cdk-lib/core';
 
@@ -9,5 +10,10 @@ test('dlq creates an alarm', () => {
   const dlqStack = new DeadLetterQueue(app, 'DLQ');
 const template = Template.fromStack(dlqStack)
 
-  expect(template.toJSON()).toMatchSnapshot();;
+  // expect(template.toJSON()).toMatchSnapshot();;
+
+  expect(template.hasResourceProperties('AWS::CloudWatch::Alarm', {
+    MetricName: 'ApproximateNumberOfMessagesVisible',
+    Namespace: 'AWS/SQS',
+}))
 });
