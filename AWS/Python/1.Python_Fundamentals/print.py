@@ -1,5 +1,9 @@
 # Print String
-print('Hello World!')
+# print('Hello World!')
 
 # print an integer
-print(32)
+# print(32)
+
+# Concatenate and print
+
+print('Hello World!\n' + str(32))
