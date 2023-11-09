@@ -1,4 +1,4 @@
-# Create variables of different types and display them.
+""" Create variables of different types and display them. """
 
 def main():
     # String (str)
