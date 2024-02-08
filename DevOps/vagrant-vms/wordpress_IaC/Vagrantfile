@@ -113,13 +113,13 @@ EOF
 
     sudo mysql -u root -e 'CREATE DATABASE wordpress;'
     sudo mysql -u root -e 'CREATE USER wordpress@localhost IDENTIFIED BY "admin321";'
-    sudo mysql -u root -e 'GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER ON wordpress.* TO wordpress@localhost;'
+    sudo mysql -u root -e 'GRANT ALL PRIVILEGES ON wordpress.* TO "wordpress"@"localhost";'
     sudo mysql -u root -e 'FLUSH PRIVILEGES;'
 
     sudo -u www-data cp /srv/www/wordpress/wp-config-sample.php /srv/www/wordpress/wp-config.php
     sudo -u www-data sed -i 's/database_name_here/wordpress/' /srv/www/wordpress/wp-config.php
     sudo -u www-data sed -i 's/username_here/wordpress/' /srv/www/wordpress/wp-config.php
-    sudo -u www-data sed -i 's/password_here/<admin321>/' /srv/www/wordpress/wp-config.php
+    sudo -u www-data sed -i 's/password_here/admin321/' /srv/www/wordpress/wp-config.php
 
     systemctl restart mysql
     systemctl restart apache2
