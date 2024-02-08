@@ -1,0 +1,51 @@
+sudo apt update
+sudo apt install apache2 \
+                 ghostscript \
+                 libapache2-mod-php \
+                 mysql-server \
+                 php \
+                 php-bcmath \
+                 php-curl \
+                 php-imagick \
+                 php-intl \
+                 php-json \
+                 php-mbstring \
+                 php-mysql \
+                 php-xml \
+                 php-zip -y
+				 
+sudo mkdir -p /srv/www
+sudo chown www-data: /srv/www
+curl https://wordpress.org/latest.tar.gz | sudo -u www-data tar zx -C /srv/www
+
+sudo a2ensite wordpress
+
+
+sudo mysql -u root
+
+CREATE DATABASE wordpress;
+
+CREATE USER wordpress@localhost IDENTIFIED BY 'admin321';
+
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER ON wordpress.* TO wordpress@localhost;
+
+FLUSH PRIVILEGES;
+
+sudo -u www-data cp /srv/www/wordpress/wp-config-sample.php /srv/www/wordpress/wp-config.php
+
+
+sudo -u www-data sed -i 's/database_name_here/wordpress/' /srv/www/wordpress/wp-config.php
+sudo -u www-data sed -i 's/username_here/wordpress/' /srv/www/wordpress/wp-config.php
+sudo -u www-data sed -i 's/password_here/<admin321>/' /srv/www/wordpress/wp-config.php
+
+sudo -u www-data nano /srv/www/wordpress/wp-config.php
+
+
+define('AUTH_KEY',         '1G#)Q-i-n}(qDA0,S?^fg$orJz`ilBgXz@b)y{8-z+p)hnkBiJ*il$Wul!C(ELgc');
+define('SECURE_AUTH_KEY',  '_X|XORF+67)53yX|Jm3E55G%+  S?MmNat3OJwC8t|=6{^V>u>G+iuT2)WTL^9CU');
+define('LOGGED_IN_KEY',    '-(.?ND.F=`j*>5[5i,W%<4x>&I4;jfu)g#jYss rxKuK@2|0-79qYs] dCT@5Hva');
+define('NONCE_KEY',        'KNR@Uc{JtkN,YzK/mW|Tl[I$?ZH+{6CG`h9qg-9 o=7EAq]f>ag)IItnQT#Ygs)B');
+define('AUTH_SALT',        '#-h|Q<N`,g>|3g55TgJW8RX>Q rQHP+;d)B~E_pj{F$Ll6w&6[0~.:{7%IP>GBD#');
+define('SECURE_AUTH_SALT', 'w;3y#:_YK83<`)wi:WbXk=|KZ-+k-EOIzBBD+and<tG+;!ancmeWjq);fkw+(,-#');
+define('LOGGED_IN_SALT',   '-#n$:YcK)-f,$%7DN=ju[[/1 ?o`-LB^{t+x5hao.Qe(4:i)cE+|I=Z2O(~1}8O>');
+define('NONCE_SALT',       'h??/8dOT($bi5QNc~W+.<!^*B+5,NsuTJhBI*@3ClqI_9a;O9,3x!RW8*M1FE+I@');

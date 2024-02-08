@@ -2,3 +2,4 @@ node_modules
 .vscode
 GitHub_Action
 package-lock.json
+.vagrant
