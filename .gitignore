@@ -3,3 +3,4 @@ node_modules
 GitHub_Action
 package-lock.json
 .vagrant
+/Devops/Bash_Scripts/*.log
