@@ -1,0 +1,9 @@
+---
+# vars file for post-install
+USRNM: commonuser
+COMM: variable from group_all file
+ntp0: ptbtime1.ptb.de
+ntp1: ptbtime2.ptb.de
+ntp2: ptbtime3.ptb.de
+ntp3: ntp1.t-online.de
+dir1: /opt/dir22
