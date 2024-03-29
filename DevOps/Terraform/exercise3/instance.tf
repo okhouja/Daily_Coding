@@ -1,5 +1,5 @@
 resource "aws_key_pair" "terra-key" {
-    key_name = "terrakey"
+    key_name = "terra_key.rsa"
     public_key = file("terrakey.pub")    
 }
 
@@ -14,12 +14,12 @@ resource "aws_instance" "terra-instance" {
     project = "Terra"
   }
 
-  provisoner "file" {
+  provisioner "file" {
     source = "web.sh"
     destination = "/tmp/web.sh"
   }
   
-  provisoner "remoter-exec"{
+  provisioner "remote-exec"{
     inline = [
         "chomd u+x /tmp/web.sh",
         "sudo /tmp/web.sh"
@@ -28,7 +28,7 @@ resource "aws_instance" "terra-instance" {
 
   connection {
     user = var.USER
-    private_key = file("terrakey")
-    host = var.public_ip
+    private_key = file("terra_key.rsa")
+    host = self.public_ip
   }
 }
