@@ -4,6 +4,8 @@ GitHub_Action
 package-lock.json
 .vagrant
 /Devops/Bash_Scripts/*.log
+/Devops/Python/*
+/Devops/Kops/*
 
 # Local .terraform directories
 **/.terraform/*
