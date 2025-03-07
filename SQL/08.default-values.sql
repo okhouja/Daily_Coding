@@ -5,3 +5,10 @@ CREATE TABLE employers (
     yearly_revenue NUMERIC(5,2), -- Exact value, Allowed: 123.12, Not allowed: 12345.123
     is_hiring BOOLEAN DEFAULT FALSE
 );
+
+CREATE TABLE conversation (
+    user_name VARCHAR(200),
+    employer_name VARCHAR(250),
+    message TEXT,
+    date_sent TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
