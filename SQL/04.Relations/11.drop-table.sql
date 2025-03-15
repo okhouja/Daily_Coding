@@ -1,3 +1,3 @@
-DROP TABLE cities;
-DROP TABLE adresses;
-DROP TABLE users;
+-- DROP TABLE cities;
+-- DROP TABLE users;
+DROP TABLE addresses;
