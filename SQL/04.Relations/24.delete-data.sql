@@ -1,5 +1,5 @@
 -- DELETE FROM company_buildings
--- WHERE id = 1;
+-- WHERE id = 2;
 
 -- DELETE FROM teams
 -- WHERE id = 2;
