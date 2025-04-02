@@ -1,0 +1,1 @@
+START TRANSACTION; -- Work only in MYSQL
