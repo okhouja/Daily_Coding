@@ -3,8 +3,8 @@ CREATE TABLE cities(
 );
 
 CREATE TABLE locations(
-    -- id INT PRIMARY KEY AUTO_INCREMENT, -- MySQL
-    id SERIAL PRIMARY KEY,  -- -- Postgresql
+    id INT PRIMARY KEY AUTO_INCREMENT, -- MySQL
+    -- id SERIAL PRIMARY KEY,  -- -- Postgresql
     title VARCHAR(300),
     street VARCHAR(300) NOT NULL,
     house_number VARCHAR(10) NOT NULL,
@@ -14,14 +14,12 @@ CREATE TABLE locations(
 );
 
 CREATE TABLE users(
-    -- id INT PRIMARY KEY AUTO_INCREMENT, -- MySQL
-    id SERIAL PRIMARY KEY,  -- -- Postgresql
+    id INT PRIMARY KEY AUTO_INCREMENT, -- MySQL
+    -- id SERIAL PRIMARY KEY,  -- -- Postgresql
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     birthdate DATE NOT NULL,
-    email VARCHAR(300) NOT NULL UNIQUE,
-    location_id INT NOT NULL,
-    FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
+    email VARCHAR(300) NOT NULL
 );
 
 CREATE TABLE organizers(
@@ -35,8 +33,8 @@ CREATE TABLE tags(
 );
 
 CREATE TABLE events(
-    -- id INT PRIMARY KEY AUTO_INCREMENT, -- MySQL
-    id SERIAL PRIMARY KEY,  -- -- Postgresql
+    id INT PRIMARY KEY AUTO_INCREMENT, -- MySQL
+    -- id SERIAL PRIMARY KEY,  -- -- Postgresql
     name VARCHAR(300) NOT NULL CHECK (LENGTH(name) > 5),
     date_planned TIMESTAMP NOT NULL,
     image VARCHAR(300),

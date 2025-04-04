@@ -1,8 +1,8 @@
-INSERT INTO tags (name)
-VALUES ('socialize'), ('learn'), ('connect'), ('dinner'), ('breakfast');
+-- INSERT INTO tags (name)
+-- VALUES ('socialize'), ('learn'), ('connect'), ('dinner'), ('breakfast');
 
-INSERT INTO cities (name)
-VALUES ('Munich'), ('Berlin'), ('Cologne'), ('Frankfurt'), ('Hamburg');
+-- INSERT INTO cities (name)
+-- VALUES ('Munich'), ('Berlin'), ('Cologne'), ('Frankfurt'), ('Hamburg');
 
 -- INSERT INTO locations (title, street, house_number, postal_code, city_name)
 -- VALUES 
@@ -29,7 +29,7 @@ VALUES ('Munich'), ('Berlin'), ('Cologne'), ('Frankfurt'), ('Hamburg');
 --   ('somepw2', 2);
 
 
--- INSERT INTO events (name, date_planned, image, description, max_participants, min_age, location_id, organizer_id)
+-- INSERT INTO events (name, date_planned, image, description, max_participants, min_age, location_id, organizers_id)
 -- VALUES 
 --   (
 --     'New in town', 
@@ -43,14 +43,14 @@ VALUES ('Munich'), ('Berlin'), ('Cologne'), ('Frankfurt'), ('Hamburg');
 --   );
 
 
--- INSERT INTO events_tags (event_id, tag_name)
--- VALUES 
---   (1, 'socialize'),
---   (1, 'connect'),
---   (1, 'dinner');
+INSERT INTO events_tags (event_id, tag_name)
+VALUES 
+  (1, 'socialize'),
+  (1, 'connect'),
+  (1, 'dinner');
 
 
--- INSERT INTO events_users (event_id, user_id)
--- VALUES 
---   (1, 3),
---   (1, 4);
+INSERT INTO events_users (event_id, user_id)
+VALUES 
+  (1, 3),
+  (1, 4);
